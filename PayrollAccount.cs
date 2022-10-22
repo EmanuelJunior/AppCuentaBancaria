@@ -9,13 +9,13 @@ namespace AppCuentaBanca
         readonly int operationsLimit = 6;
 
         public override string ToString() {
+            Console.Clear();
             Console.Write("Enter the name of the company: ");
             this.companyName = Console.ReadLine();
 
-            Console.Write("Enter the NIT of the company: ");
-            this.companyNIT = int.Parse( Console.ReadLine() );
+            this.companyNIT = this.CheckFieldIsNumber("Enter the NIT of the company: ");
 
-            return "\nCreate successful Payroll account...\n".ToUpper();
+            return "Payroll-account".ToUpper();
         }
     }
 }

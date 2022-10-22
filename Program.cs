@@ -5,20 +5,24 @@ namespace AppCuentaBanca
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            
-            // Account cuentaUno = new Account();
-            // Account cuentaDos = new Account();
-            // cuentaDos.AccountNumber = 12345;
 
-            // cuentaUno.TransferMoney(cuentaUno, cuentaDos, 200);
 
+            // User menuUser = new User();
+            // menuUser.ShowMenuApp();
             Admin root = new Admin();
             root.Nav(1);
-        
-            /* ExpressAccount cuentaExpress = new ExpressAccount();
-            cuentaExpress.Withdraw(); */
+            root.Nav(2);
+
+
+            // ExpressAccount firstAccount = new ExpressAccount();
+            // ExpressAccount sAccount = new ExpressAccount();
+            // firstAccount.balance = 1000;
+            // sAccount.balance = 1000;
+            // sAccount.AccountNumber = 123;
+
+            // firstAccount.TransferMoney( firstAccount, sAccount, 200 );
         }
     }
 }

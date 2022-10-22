@@ -5,26 +5,36 @@ namespace AppCuentaBanca
 {
     public class CurrentAccount : Account
     {
+
         List<string> paymentMethods = new List<string>();
         int overdraftQuota;
 
         public override string ToString() {
-            
-            Console.Write("How much is the overdraft?: ");
-            this.overdraftQuota = int.Parse( Console.ReadLine() );
-
-            Console.Write("How many payment methods do you have?: ");
-            int cant = int.Parse( Console.ReadLine() );
+            this.overdraftQuota = this.CheckFieldIsNumber("How much is the overdraft?");
+            int cant = this.CheckFieldIsNumber("How many payment methods do you have?");
 
             for ( int i = 0; i < cant; i++ ) {
-                Console.Write("Payment method: ");
+                Console.Clear();
+                Console.Write($"{i+1}. Payment method: ");
                 this.paymentMethods.Add( Console.ReadLine() );
             }
 
-            return "\nCreate successful Current account...\n".ToUpper();
+            return "Current-account".ToUpper();
         }
 
-        public override bool Withdraw() {
+        public override void ShowAccountData() {
+            Console.WriteLine("\n====== Account data: ======".ToUpper());
+            base.ShowAccountData();
+
+            Console.WriteLine($"Overdraft quota: {this.overdraftQuota}");
+            Console.WriteLine($"\nPayment methods: ");
+            
+            foreach ( string paymentMethod in this.paymentMethods ) {
+                Console.WriteLine($"    - {paymentMethod}");
+            }
+        }
+
+        protected override bool Withdraw() {
             try {
                 // Ask for the amount to withdraw
                 Console.Write("How much is the amount you want to withdraw?: ");

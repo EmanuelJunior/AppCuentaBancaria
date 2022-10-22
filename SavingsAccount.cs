@@ -9,7 +9,7 @@ namespace AppCuentaBanca
         readonly int operationsLimit = 6;
 
         public override string ToString() {
-            return "\nCreate successful Savings account...\n".ToUpper();
+            return "Savings-account".ToUpper();
         }
 
         // Metodos

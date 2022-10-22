@@ -1,22 +1,26 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AppCuentaBanca
 {
     public class Admin
     {
-        List<CurrentAccount> currentAccounts = new List<CurrentAccount>();
-        List<SavingsAccount> savingsAccounts = new List<SavingsAccount>();
-        List<PayrollAccount> payrollAccounts = new List<PayrollAccount>();
+        
+        protected List<CurrentAccount> currentAccounts = new List<CurrentAccount>();
+        protected List<SavingsAccount> savingsAccounts = new List<SavingsAccount>();
+        protected List<PayrollAccount> payrollAccounts = new List<PayrollAccount>();
+        protected List<ExpressAccount> expressAccount = new List<ExpressAccount>();
 
         public void Nav( int option ) {
             switch( option ) {
                 case 1:
-                    // Create a new account
+                    Console.Clear();
                     this.SelectAccountTypeAndCreate();
                     break;
                 case 2:
-                    // Delete an account
+                    Console.Clear();
+                    this.DeleteAccount();
                     break;
                 case 3:
                     // Modify an account
@@ -33,82 +37,209 @@ namespace AppCuentaBanca
             }
         }
 
+        void ListAccountsChoose( string actionType ) {
+
+            Console.WriteLine($"\nwhat type of account do you want to {actionType}?: ".ToUpper());
+
+            Console.WriteLine($"\n1. If you want to {actionType} an EXPRESS ACCOUNT");
+            Console.WriteLine("2. If you want a PAYROLL ACCOUNT");
+            Console.WriteLine("3. If you prefer a SAVINGS ACCOUNT");
+            Console.WriteLine("4. If you want a CURRENT ACCOUNT\n");
+            
+            Console.Write("select an option: ".ToUpper());
+        }
+
         void SelectAccountTypeAndCreate() {
 
-            Console.WriteLine("\nwhat type of account do you want to create?: ".ToUpper());
-
-            Console.WriteLine("\n1. If you want to create an express account");
-            Console.WriteLine("2. If you want a payroll account");
-            Console.WriteLine("3. If you prefer a savings");
-            Console.WriteLine("4. If you want a current account\n");
-
-            Console.Write("select an option: ".ToUpper());
+            this.ListAccountsChoose("create");
             int accountType = int.Parse(Console.ReadLine());
+            Console.Clear();
 
+            // Select the account type and create the new object instance
             switch ( accountType ) {
                 case 1:
                     ExpressAccount expressAccount = new ExpressAccount();
-                    this.CreateAccount( expressAccount );
+                    this.FillUserData( expressAccount );
                     break;
                 case 2:
                     PayrollAccount payrollAccount = new PayrollAccount();
-                    this.CreateAccount( payrollAccount );
+                    this.FillUserData( payrollAccount );
                     break;
                 case 3:
                     SavingsAccount savingsAccount = new SavingsAccount();
-                    this.CreateAccount( savingsAccount );
+                    this.FillUserData( savingsAccount );
                     break;
                 case 4:
                     CurrentAccount currentAccount = new CurrentAccount();
-                    this.CreateAccount( currentAccount );
+                    this.FillUserData( currentAccount );
                     break;
             }
         }
 
-        void CreateAccount( Account account ) {
+        void FillUserData( Account account ) {
 
-            // Create a new account
-            Console.Write("\nName: ");
+            // Fill in the account details
+            Console.Clear();
+            Console.Write("Name: ");
             account.Name = Console.ReadLine();
 
+            Console.Clear();
             Console.Write("Last name: ");
             account.LastName = Console.ReadLine();
 
+            Console.Clear();
             Console.Write("Profession: ");
             account.Profession = Console.ReadLine();
 
+            Console.Clear();
             Console.Write("Address: ");
             account.Address = Console.ReadLine();
 
+            Console.Clear();
             Console.Write("Password: ");
             account.Password = Console.ReadLine();
+            Console.Clear();
 
-            Console.Write("ID number: ");
-            account.IdNumber = int.Parse(Console.ReadLine());
+            account.IdNumber = CheckFieldIsNumber("Id Number");
+            account.AccountNumber = CheckFieldIsNumber("Account Number");
+            account.Phone = CheckFieldIsNumber("Cellphone");
 
-            Console.Write("Account number: ");
-            account.AccountNumber = int.Parse(Console.ReadLine());
+            // Fill in the individual properties of each type of account
+            string accountType = account.ToString();
 
-            Console.Write("Phone: ");
-            account.Phone = int.Parse(Console.ReadLine());
+            // Save the new user in the corresponding list
+            this.SaveTheNewAccount( accountType, account );
+        }
 
-            Console.WriteLine( account );
+        int CheckFieldIsNumber( string message) {
+            // Cycle to validate the field number
+            bool IsCorrect = false;
+            int field = 0;
+
+            while ( !IsCorrect ) {
+                try {
+                    if ( field == 0 ) {
+                        Console.Write($"{message}: ");
+                        field = int.Parse(Console.ReadLine());
+                        Console.Clear();
+                        IsCorrect = true;
+                    }
+                } catch ( Exception ) {
+                    Console.Clear();
+                    Console.WriteLine($"\nThe {message} number must be a number\n".ToUpper());
+                    IsCorrect = false;
+                }
+            }
+
+            return field;
+        }
+
+        bool IsInformationCorrect( Account account ) {
+
+            Console.Clear();
+            Console.WriteLine($"\n===== Account Information =====".ToUpper());
+            account.ShowAccountData();
+
+            // Ask if the information provided is correct
+            Console.Write("\nIs the information correct? (y/n): ");
+            string answer = Console.ReadLine();
+
+            if ( answer == "y" || answer == "Y" ) return true;
+            else return false;
+        }
+        
+        bool SaveTheNewAccount(string accountType, Account account) {
+
+            bool validate = this.IsInformationCorrect( account );
+
+            /* Validating that the information provided by the user is incorrect. */
+            if ( !validate ) {
+                Console.WriteLine("\nAccount creation failed!\n".ToUpper());
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+                return false;
+            }
+
+            /* Based on what the ToString() returns add the user to 
+            their respective account ( express, payroll, savings and current ) */
+            switch( accountType ) {
+                case "PAYROLL-ACCOUNT":
+                    this.payrollAccounts.Add( (PayrollAccount) account );
+                    break;
+                case "SAVINGS-ACCOUNT":
+                    this.savingsAccounts.Add( (SavingsAccount) account );
+                    break;
+                case "CURRENT-ACCOUNT":
+                    this.currentAccounts.Add( (CurrentAccount) account );
+                    break;
+                case "EXPRESS-ACCOUNT":
+                    this.expressAccount.Add( (ExpressAccount) account );
+                    break;
+            };
+
+            Console.WriteLine("\nAccount created successfully!\n".ToUpper());
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+            return true;
         }
 
         void DeleteAccount() {
+
             // Delete an account
+            this.ListAccountsChoose("delete");
+            int accountType = int.Parse(Console.ReadLine());
+            Console.Clear();
+
+            // Ask the administrator for the id of the user you want to delete
+            Console.Write("Enter the id of the user you want to delete: ");
+            int idToDelete = int.Parse(Console.ReadLine());
+            
+            int i = 0;
+
+            // Create a predicate function for Delete Account
+            Predicate<Account> condition = account => account.IdNumber == idToDelete;
+
+            // Find the account and delete it according to the condition
+            switch (accountType)
+            {
+                case 1:
+                    i = this.expressAccount.RemoveAll( condition );
+                    break;
+                case 2:
+                    i = this.payrollAccounts.RemoveAll( condition );
+                    break;
+                case 3:
+                    i = this.savingsAccounts.RemoveAll( condition );
+                    break;
+                case 4:
+                    i = this.currentAccounts.RemoveAll( condition );
+                    break;
+            }
+            
+            // Validate that the account has been deleted and show a message
+            if ( i == 1 ) Console.WriteLine("\nThe account has been deleted...".ToUpper());
+            else Console.WriteLine("\nThe account does not exist...".ToUpper());
+            
+            Console.WriteLine("\nPress any key to continue...".ToUpper());
+            Console.ReadKey();
         }
 
         void ModifyAccount() {
+
             // Modify an account
         }
 
         void ConsultAccount() {
+
             // Consult an account
         }
 
         void ConsultAllAccounts() {
+
             // Consult all accounts
+            this.ListAccountsChoose("list");
+            int accountType = int.Parse(Console.ReadLine());
+            Console.Clear();
         }
     }
 }

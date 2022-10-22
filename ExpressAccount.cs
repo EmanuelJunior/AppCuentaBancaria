@@ -7,10 +7,10 @@ namespace AppCuentaBanca
         readonly float administrationFee = 12500f;
 
         public override string ToString() {
-            return "\nCreate successful Express account...\n".ToUpper();
+            return "Express-account".ToUpper();
         }
 
-        public override bool Withdraw() {
+        protected override bool Withdraw() {
             // Ask for the amount to withdraw
             Console.Write("How much is the amount you want to withdraw?: ");
             float amount = float.Parse(Console.ReadLine());
