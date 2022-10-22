@@ -7,13 +7,16 @@ namespace AppCuentaBanca
     {
         static void Main()
         {
+            Admin.OptionsForAdmin(1);
+            Admin.OptionsForAdmin(1);
 
+            User menuUser = new User();
+            Controller options = new Controller();
 
-            // User menuUser = new User();
-            // menuUser.ShowMenuApp();
-            Admin root = new Admin();
-            root.Nav(1);
-            root.Nav(2);
+            menuUser.ShowMenuApp();
+            options.OptionsPersonalAccount();
+            menuUser.ShowMenuAccount();
+
 
 
             // ExpressAccount firstAccount = new ExpressAccount();

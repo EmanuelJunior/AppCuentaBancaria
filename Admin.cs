@@ -7,26 +7,28 @@ namespace AppCuentaBanca
     public class Admin
     {
         
-        protected List<CurrentAccount> currentAccounts = new List<CurrentAccount>();
-        protected List<SavingsAccount> savingsAccounts = new List<SavingsAccount>();
-        protected List<PayrollAccount> payrollAccounts = new List<PayrollAccount>();
-        protected List<ExpressAccount> expressAccount = new List<ExpressAccount>();
+        static protected List<CurrentAccount> currentAccounts = new List<CurrentAccount>();
+        static protected List<SavingsAccount> savingsAccounts = new List<SavingsAccount>();
+        static protected List<PayrollAccount> payrollAccounts = new List<PayrollAccount>();
+        static protected List<ExpressAccount> expressAccount = new List<ExpressAccount>();
 
-        public void Nav( int option ) {
+        static public void OptionsForAdmin( int option ) {
             switch( option ) {
                 case 1:
                     Console.Clear();
-                    this.SelectAccountTypeAndCreate();
+                    SelectAccountTypeAndCreate();
                     break;
                 case 2:
                     Console.Clear();
-                    this.DeleteAccount();
+                    DeleteAccount();
                     break;
                 case 3:
                     // Modify an account
                     break;
                 case 4:
                     // Consult an account
+                    Console.Clear();
+                    ConsultIndividualAccount("Consult Account");
                     break;
                 case 5:
                     // Consult all accounts
@@ -37,7 +39,7 @@ namespace AppCuentaBanca
             }
         }
 
-        void ListAccountsChoose( string actionType ) {
+        static void ListAccountsChoose( string actionType ) {
 
             Console.WriteLine($"\nwhat type of account do you want to {actionType}?: ".ToUpper());
 
@@ -49,9 +51,9 @@ namespace AppCuentaBanca
             Console.Write("select an option: ".ToUpper());
         }
 
-        void SelectAccountTypeAndCreate() {
+        static void SelectAccountTypeAndCreate() {
 
-            this.ListAccountsChoose("create");
+            ListAccountsChoose("create");
             int accountType = int.Parse(Console.ReadLine());
             Console.Clear();
 
@@ -59,24 +61,24 @@ namespace AppCuentaBanca
             switch ( accountType ) {
                 case 1:
                     ExpressAccount expressAccount = new ExpressAccount();
-                    this.FillUserData( expressAccount );
+                    FillUserData( expressAccount );
                     break;
                 case 2:
                     PayrollAccount payrollAccount = new PayrollAccount();
-                    this.FillUserData( payrollAccount );
+                    FillUserData( payrollAccount );
                     break;
                 case 3:
                     SavingsAccount savingsAccount = new SavingsAccount();
-                    this.FillUserData( savingsAccount );
+                    FillUserData( savingsAccount );
                     break;
                 case 4:
                     CurrentAccount currentAccount = new CurrentAccount();
-                    this.FillUserData( currentAccount );
+                    FillUserData( currentAccount );
                     break;
             }
         }
 
-        void FillUserData( Account account ) {
+        static void FillUserData( Account account ) {
 
             // Fill in the account details
             Console.Clear();
@@ -102,16 +104,18 @@ namespace AppCuentaBanca
 
             account.IdNumber = CheckFieldIsNumber("Id Number");
             account.AccountNumber = CheckFieldIsNumber("Account Number");
+            account.Balance = CheckFieldIsNumber("Balance");
             account.Phone = CheckFieldIsNumber("Cellphone");
+            account.Operations = CheckFieldIsNumber("Operations");
 
             // Fill in the individual properties of each type of account
             string accountType = account.ToString();
 
             // Save the new user in the corresponding list
-            this.SaveTheNewAccount( accountType, account );
+            SaveTheNewAccount( accountType, account );
         }
 
-        int CheckFieldIsNumber( string message) {
+        static int CheckFieldIsNumber( string message) {
             // Cycle to validate the field number
             bool IsCorrect = false;
             int field = 0;
@@ -134,7 +138,7 @@ namespace AppCuentaBanca
             return field;
         }
 
-        bool IsInformationCorrect( Account account ) {
+        static bool IsInformationCorrect( Account account ) {
 
             Console.Clear();
             Console.WriteLine($"\n===== Account Information =====".ToUpper());
@@ -148,9 +152,9 @@ namespace AppCuentaBanca
             else return false;
         }
         
-        bool SaveTheNewAccount(string accountType, Account account) {
+        static bool SaveTheNewAccount(string accountType, Account account) {
 
-            bool validate = this.IsInformationCorrect( account );
+            bool validate = IsInformationCorrect( account );
 
             /* Validating that the information provided by the user is incorrect. */
             if ( !validate ) {
@@ -164,16 +168,16 @@ namespace AppCuentaBanca
             their respective account ( express, payroll, savings and current ) */
             switch( accountType ) {
                 case "PAYROLL-ACCOUNT":
-                    this.payrollAccounts.Add( (PayrollAccount) account );
+                    payrollAccounts.Add( (PayrollAccount) account );
                     break;
                 case "SAVINGS-ACCOUNT":
-                    this.savingsAccounts.Add( (SavingsAccount) account );
+                    savingsAccounts.Add( (SavingsAccount) account );
                     break;
                 case "CURRENT-ACCOUNT":
-                    this.currentAccounts.Add( (CurrentAccount) account );
+                    currentAccounts.Add( (CurrentAccount) account );
                     break;
                 case "EXPRESS-ACCOUNT":
-                    this.expressAccount.Add( (ExpressAccount) account );
+                    expressAccount.Add( (ExpressAccount) account );
                     break;
             };
 
@@ -183,10 +187,10 @@ namespace AppCuentaBanca
             return true;
         }
 
-        void DeleteAccount() {
+        static void DeleteAccount() {
 
             // Delete an account
-            this.ListAccountsChoose("delete");
+            ListAccountsChoose("delete");
             int accountType = int.Parse(Console.ReadLine());
             Console.Clear();
 
@@ -203,16 +207,16 @@ namespace AppCuentaBanca
             switch (accountType)
             {
                 case 1:
-                    i = this.expressAccount.RemoveAll( condition );
+                    i = expressAccount.RemoveAll( condition );
                     break;
                 case 2:
-                    i = this.payrollAccounts.RemoveAll( condition );
+                    i = payrollAccounts.RemoveAll( condition );
                     break;
                 case 3:
-                    i = this.savingsAccounts.RemoveAll( condition );
+                    i = savingsAccounts.RemoveAll( condition );
                     break;
                 case 4:
-                    i = this.currentAccounts.RemoveAll( condition );
+                    i = currentAccounts.RemoveAll( condition );
                     break;
             }
             
@@ -224,20 +228,112 @@ namespace AppCuentaBanca
             Console.ReadKey();
         }
 
-        void ModifyAccount() {
+        static void ModifyAccount() {
 
             // Modify an account
+            ListAccountsChoose("modify");
+            int accountType = int.Parse(Console.ReadLine());
+            Console.Clear();
+
+            // Ask the administrator for the id of the user you want to modify
+            Console.Write("Enter the id of the user you want to modify: ");
+            int idToModify = int.Parse(Console.ReadLine());
+            Console.Clear();
+
+            // Create a predicate function for Modify Account
+            Predicate<Account> condition = account => account.IdNumber == idToModify;
+
+            // Find the account and modify it according to the condition
+            switch (accountType)
+            {
+                case 1:
+                    // this.expressAccount.Find( condition ).ModifyAccount();
+                    break;
+                case 2:
+                    // this.payrollAccounts.Find( condition ).ModifyAccount();
+                    break;
+                case 3:
+                    // this.savingsAccounts.Find( condition ).ModifyAccount();
+                    break;
+                case 4:
+                    // this.currentAccounts.Find( condition ).ModifyAccount();
+                    break;
+            }
+
+            Console.WriteLine("\nPress any key to continue...".ToUpper());
+            Console.ReadKey();
         }
 
-        void ConsultAccount() {
-
+        protected static Account ConsultIndividualAccount( string message, bool getDataAccount = false ) {
+            
             // Consult an account
+            Console.Clear();
+            Console.WriteLine($"\n===== { message } =====\n".ToUpper());
+
+            int idNumber = CheckFieldIsNumber("Enter the id number");
+
+            // Create a predicate function for Consult Account
+            Predicate<Account> condition = account => account.IdNumber == idNumber;
+
+            // Find the account and consult it according to the condition
+
+            // Express Account
+            Account account = expressAccount.Find( condition );
+            if ( account != null ) {
+                if (getDataAccount) return account;
+
+                account.ShowAccountData();
+                Console.WriteLine("\nPress any key to continue...".ToUpper());
+                Console.ReadKey();
+
+                return null;
+            }
+
+            // Payroll Account
+            account = payrollAccounts.Find( condition );
+            if ( account != null ) {
+                if (getDataAccount) return account;
+
+                account.ShowAccountData();
+                Console.WriteLine("\nPress any key to continue...".ToUpper());
+                Console.ReadKey();
+
+                return null;
+            }
+
+            // Savings Account
+            account = savingsAccounts.Find( condition );
+            if ( account != null ) {
+                if (getDataAccount) return account;
+
+                account.ShowAccountData();
+                Console.WriteLine("\nPress any key to continue...".ToUpper());
+                Console.ReadKey();
+
+                return null;
+            }
+
+            // Current Account
+            account = currentAccounts.Find( condition );
+            if ( account != null ) {
+                if (getDataAccount) return account;
+
+                account.ShowAccountData();
+                Console.WriteLine("\nPress any key to continue...".ToUpper());
+                Console.ReadKey();
+
+                return null;
+            }
+
+            Console.WriteLine("\nThe account does not exist...".ToUpper());
+            Console.WriteLine("\nPress any key to continue...".ToUpper());
+            return null;
         }
 
-        void ConsultAllAccounts() {
+        static void ConsultAllAccounts() {
 
             // Consult all accounts
-            this.ListAccountsChoose("list");
+            ListAccountsChoose("list");
             int accountType = int.Parse(Console.ReadLine());
             Console.Clear();
         }

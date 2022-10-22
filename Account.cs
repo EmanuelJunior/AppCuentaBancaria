@@ -11,18 +11,10 @@ namespace AppCuentaBanca
             return "Account";
         }
 
+        // Transfer money from one account to another
         public virtual bool TransferMoney(Account personalAccount, Account targetAccount, float amount) {
-
-            Console.Write("Enter the account number to transfer: ");
-            int accountNumbertoTransfer = int.Parse(Console.ReadLine());
-
-            /* Console.WriteLine("Enter the amount to transfer");
-            int amountToTransfer = int.Parse(Console.ReadLine()); */
         
-            if (
-                targetAccount.accountNumber != accountNumbertoTransfer 
-                || amount <= 0 || personalAccount.balance - amount <= 0
-            ) 
+            if ( amount <= 0 || personalAccount.balance - amount < 0 ) 
             {
                 Console.WriteLine("\nThe transfer was erroneous...".ToUpper());
                 return false;
@@ -30,8 +22,11 @@ namespace AppCuentaBanca
 
             personalAccount.balance -= amount;
             targetAccount.balance += amount;
-            Console.WriteLine($"Fine {amount} - Personal: {personalAccount.balance}");
-            Console.WriteLine($"Fine {amount} - Target: {personalAccount.balance}");
+
+            // Prints the result of the transfer
+            
+            Console.WriteLine($"Amount: {amount} - Personal Balance: {personalAccount.balance}");
+            Console.WriteLine($"Amount: {amount} - Target Balance: {targetAccount.balance}");
             return true;
         }
         
@@ -49,7 +44,7 @@ namespace AppCuentaBanca
 
         protected virtual void MakeDeposit() {}
         protected virtual void CheckBalance() {}
-        protected virtual void Balance() {}
+        protected virtual void BalanceReport() {}
 
         // create function that shows all the properties of the class
         public virtual void ShowAccountData() {
@@ -60,8 +55,9 @@ namespace AppCuentaBanca
             Console.WriteLine($"Password: {this.password}");
             Console.WriteLine($"ID number: {this.idNumber}");
             Console.WriteLine($"Account number: {this.accountNumber}");
-            Console.WriteLine($"Phone: {this.phone}");
             Console.WriteLine($"Operations: {this.operations}");
+            Console.WriteLine($"Balance: {this.balance}");
+            Console.WriteLine($"Phone: {this.phone}");
         }
 
         public int CheckFieldIsNumber( string message) {
@@ -88,7 +84,7 @@ namespace AppCuentaBanca
         }
 
         /* Declaring the variables that will be used in the class. */
-        public float balance = 300000.5f;
+        protected float balance { get; set; }
 
         protected string name { get; set; }
         protected string lastName { get; set; }
@@ -111,5 +107,6 @@ namespace AppCuentaBanca
         public int AccountNumber { get => this.accountNumber; set => this.accountNumber = value; }
         public int Phone { get => this.phone; set => this.phone = value; }
         public int Operations { get => this.operations; set => this.operations = value; }
+        public float Balance { get => this.balance; set => this.balance = value; }
     }
 }
