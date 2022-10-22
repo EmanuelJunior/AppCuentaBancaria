@@ -7,6 +7,7 @@ namespace AppCuentaBanca
         // Unique SavingsAccount features
         readonly float profitAbility = 0.01f;
         readonly int operationsLimit = 6;
+        readonly float costOperation = 3200;
 
         public override string ToString() {
             return "Savings-account".ToUpper();
@@ -22,18 +23,7 @@ namespace AppCuentaBanca
             return true;
         }
         // Counts the number of operations performed after the free limit
-        bool OperationsCollection( SavingsAccount personalAccount ) {
-            if (personalAccount.operations < operationsLimit ) {
-                return false;
-            }
-            
-            int chargePerOperation = personalAccount.operations - operationsLimit;
-            float collection = chargePerOperation * 3000;
-            personalAccount.balance -= collection;
-            personalAccount.operations = operationsLimit;
-            
-            return true;
-        }
+        
 
     }
 }

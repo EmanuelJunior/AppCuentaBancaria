@@ -42,9 +42,39 @@ namespace AppCuentaBanca
         }
         protected virtual bool Withdraw() { return false; }
 
-        protected virtual void MakeDeposit() {}
-        protected virtual void CheckBalance() {}
+        // Function that enter a specific amount to the personal account
+        public virtual void MakeDeposit( Account personalAccount, float amount) {
+
+            if (amount > 0) {
+                personalAccount.balance += amount;
+                Console.WriteLine($"\nThe new balance is: {personalAccount.balance}...");
+            } Console.WriteLine("\nDeposit FAILED...");
+        }
+
+        // create a function that show the account balance
+        public virtual void CheckBalance( Account personalAccount) {
+            Console.WriteLine("Are you sure to check the account balance? y/n");
+            string answer = Console.ReadLine();
+            if ( answer == "y" || answer == "Y" ){
+                Console.WriteLine($"The account balance is: {personalAccount.balance}");
+            } Console.WriteLine("Exit...");
+        
+        }
         protected virtual void BalanceReport() {}
+
+        protected bool OperationsCollection( SavingsAccount personalAccount, int operationsLimit, float costOperation ) {
+
+            if (personalAccount.operations < operationsLimit ) {
+                return false;
+            }
+            
+            int chargePerOperation = personalAccount.operations - operationsLimit;
+            float collection = chargePerOperation * costOperation;
+            personalAccount.balance -= collection;
+            personalAccount.operations = operationsLimit;
+            
+            return true;
+        }
 
         // create function that shows all the properties of the class
         public virtual void ShowAccountData() {

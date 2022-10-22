@@ -7,6 +7,7 @@ namespace AppCuentaBanca
         string companyName;
         int companyNIT;
         readonly int operationsLimit = 6;
+        readonly float costOperation = 3000;
 
         public override string ToString() {
             Console.Clear();
@@ -17,5 +18,6 @@ namespace AppCuentaBanca
 
             return "Payroll-account".ToUpper();
         }
+
     }
 }

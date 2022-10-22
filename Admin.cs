@@ -12,6 +12,32 @@ namespace AppCuentaBanca
         static protected List<PayrollAccount> payrollAccounts = new List<PayrollAccount>();
         static protected List<ExpressAccount> expressAccount = new List<ExpressAccount>();
 
+        public static T TryCodeUntilItWorks<T>( string message, string messageError, Func<T> action ) {
+        // public static T TryCodeUntilItWorks<T>( string message, string messageError, Func<string, bool, T> action ) {
+            bool isCorrect = false;
+            T valueToReturn = default(T);
+
+
+            while ( !isCorrect ) {
+                try {
+                    Console.Clear();                    
+                    valueToReturn = action();
+                    isCorrect = true;
+                    return valueToReturn;
+                } catch ( Exception e ) {
+                    Console.Clear();
+                    Console.WriteLine(messageError);
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(message);
+                    Console.ReadKey();
+                    Console.Clear();
+                }
+
+            }
+
+            return valueToReturn;
+        }
+
         static public void OptionsForAdmin( int option ) {
             switch( option ) {
                 case 1:

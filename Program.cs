@@ -9,15 +9,7 @@ namespace AppCuentaBanca
         {
             Admin.OptionsForAdmin(1);
             Admin.OptionsForAdmin(1);
-
-            User menuUser = new User();
-            Controller options = new Controller();
-
-            menuUser.ShowMenuApp();
-            options.OptionsPersonalAccount();
-            menuUser.ShowMenuAccount();
-
-
+            Controller.OptionsPersonalAccount();
 
             // ExpressAccount firstAccount = new ExpressAccount();
             // ExpressAccount sAccount = new ExpressAccount();
@@ -26,6 +18,8 @@ namespace AppCuentaBanca
             // sAccount.AccountNumber = 123;
 
             // firstAccount.TransferMoney( firstAccount, sAccount, 200 );
+
+            
         }
     }
 }
