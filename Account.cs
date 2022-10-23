@@ -3,9 +3,8 @@ using System;
 
 namespace AppCuentaBanca
 {
-    public class Account
+    public class Account 
     {
-
         // Documentar
         public override string ToString() {
             return "Account";
@@ -13,8 +12,8 @@ namespace AppCuentaBanca
 
         // Transfer money from one account to another
         public virtual bool TransferMoney(Account personalAccount, Account targetAccount, float amount) {
-        
-            if ( amount <= 0 || personalAccount.balance - amount < 0 ) 
+
+            if ( amount <= 0 || personalAccount.balance < amount ) 
             {
                 Console.WriteLine("\nThe transfer was erroneous...".ToUpper());
                 return false;
@@ -24,15 +23,15 @@ namespace AppCuentaBanca
             targetAccount.balance += amount;
 
             // Prints the result of the transfer
-            
-            Console.WriteLine($"Amount: {amount} - Personal Balance: {personalAccount.balance}");
+            Console.WriteLine($"\nAmount: {amount} - Personal Balance: {personalAccount.balance}");
             Console.WriteLine($"Amount: {amount} - Target Balance: {targetAccount.balance}");
             return true;
         }
         
-        protected virtual bool Withdraw( Account personalAccount, float amount ) {
+        public virtual bool Withdraw( Account personalAccount, float amount ) {
 
             // Withdraw money from the account
+            //
             if ( personalAccount.balance < amount ) {
                 Console.WriteLine("The money cannot be withdrawn, the amount is greater than the available balance."); 
                 return false;
@@ -40,15 +39,17 @@ namespace AppCuentaBanca
 
             return true;
         }
-        protected virtual bool Withdraw() { return false; }
+        public virtual bool Withdraw() { return false; }
 
         // Function that enter a specific amount to the personal account
         public virtual void MakeDeposit( Account personalAccount, float amount) {
 
             if (amount > 0) {
                 personalAccount.balance += amount;
-                Console.WriteLine($"\nThe new balance is: {personalAccount.balance}...");
-            } Console.WriteLine("\nDeposit FAILED...");
+                Console.WriteLine($"\nThe new balance is: { personalAccount.balance }...");
+            } 
+            
+            Console.WriteLine("\nDeposit FAILED...");
         }
 
         // create a function that show the account balance
@@ -60,14 +61,38 @@ namespace AppCuentaBanca
             } Console.WriteLine("Exit...");
         
         }
-        protected virtual void BalanceReport() {}
+        protected virtual void BalanceReport( Account personalAccount, float administrationFee) {
+            Console.WriteLine("\nThese are the costs generated throughout the month");
 
-        protected bool OperationsCollection( SavingsAccount personalAccount, int operationsLimit, float costOperation ) {
+            // Calculates the administration fee and the sample
+            DateTime today = DateTime.Now;
+            TimeSpan interval = today - dayCreateAccount;
+            double month;
+
+            if (interval.Days >= 30) {
+
+                month = Math.Truncate((double) interval.Days / 30);
+                personalAccount.balance -= administrationFee * month;
+
+                Console.WriteLine($"Administration Fee: {administrationFee * month}");
+
+            }
+
+            // Calls the OperationsCollection method
+        }
+
+        protected bool OperationsCollection( Account personalAccount, int operationsLimit, float costOperation, string[] s = null ) {
 
             if (personalAccount.operations < operationsLimit ) {
                 return false;
             }
-            
+
+            foreach (string i in s){
+                if (true) {
+                    Console.WriteLine(i);
+                }
+            }
+
             int chargePerOperation = personalAccount.operations - operationsLimit;
             float collection = chargePerOperation * costOperation;
             personalAccount.balance -= collection;
@@ -113,8 +138,12 @@ namespace AppCuentaBanca
             return field;
         }
 
+
+
         /* Declaring the variables that will be used in the class. */
-        protected float balance { get; set; }
+        protected readonly DateTime dayCreateAccount = DateTime.Now;
+
+        protected double balance { get; set; }
 
         protected string name { get; set; }
         protected string lastName { get; set; }
@@ -137,6 +166,6 @@ namespace AppCuentaBanca
         public int AccountNumber { get => this.accountNumber; set => this.accountNumber = value; }
         public int Phone { get => this.phone; set => this.phone = value; }
         public int Operations { get => this.operations; set => this.operations = value; }
-        public float Balance { get => this.balance; set => this.balance = value; }
+        public double Balance { get => this.balance; set => this.balance = value; }
     }
 }

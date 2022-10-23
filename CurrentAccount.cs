@@ -34,7 +34,7 @@ namespace AppCuentaBanca
             }
         }
 
-        protected override bool Withdraw() {
+        public override bool Withdraw() {
             try {
                 // Ask for the amount to withdraw
                 Console.Write("How much is the amount you want to withdraw?: ");

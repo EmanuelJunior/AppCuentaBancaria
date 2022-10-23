@@ -10,7 +10,7 @@ namespace AppCuentaBanca
             return "Express-account".ToUpper();
         }
 
-        protected override bool Withdraw() {
+        public override bool Withdraw() {
             // Ask for the amount to withdraw
             Console.Write("How much is the amount you want to withdraw?: ");
             float amount = float.Parse(Console.ReadLine());
@@ -22,6 +22,10 @@ namespace AppCuentaBanca
             Console.WriteLine($"\nTransferred: {amount}, Remaining money: {this.balance}");
             Console.WriteLine("\nThe withdrawal was successful...\n".ToUpper());
             return true;
+        }
+
+        protected override void BalanceReport( Account personalAccount, float administrationFee ) {
+            base.BalanceReport(personalAccount, administrationFee);
         }
     }
 }

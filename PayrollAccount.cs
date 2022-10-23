@@ -15,7 +15,6 @@ namespace AppCuentaBanca
             this.companyName = Console.ReadLine();
 
             this.companyNIT = this.CheckFieldIsNumber("Enter the NIT of the company: ");
-
             return "Payroll-account".ToUpper();
         }
 
