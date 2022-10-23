@@ -5,6 +5,8 @@ namespace AppCuentaBanca
 {
     public class Account
     {
+        public Account() { this.typeAccount = "Account"; }
+
         // Documentar
         public override string ToString() {
             return "Account";
@@ -56,30 +58,23 @@ namespace AppCuentaBanca
         public virtual void CheckBalance( Account personalAccount) {
             Console.WriteLine("Are you sure to check the account balance? y/n");
             char answer = char.Parse(Console.ReadLine());
-            if ( answer == 'y' || answer == 'Y' ){
-                Console.WriteLine($"The account balance is: {personalAccount.balance}");
-            } Console.WriteLine("Exit...");
-        
+            if ( answer != 'y' || answer != 'Y' ){
+                Console.WriteLine("Exit...");
+                return;
+            } 
+            
+            Console.WriteLine($"The account balance is: {personalAccount.balance}");  
         }
-        protected virtual void BalanceReport( Account personalAccount, float administrationFee) {
+
+        protected virtual void BalanceReport( Account personalAccount, float administrationFee ) {
             Console.WriteLine("\nThese are the costs generated throughout the month");
 
-            // Calculates the administration fee and the sample
-            DateTime today = DateTime.Now;
-            TimeSpan interval = today - dayCreateAccount;
-            double month;
-
-            if (interval.Days >= 30) {
-
-                month = Math.Truncate((double) interval.Days / 30);
-                personalAccount.balance -= administrationFee * month;
-
-                Console.WriteLine($"Administration Fee: {administrationFee * month}");
-
-            }
 
             // Calls the OperationsCollection method
         }
+
+        // Method that calculate the Administration Fee (only declared)
+        protected virtual void CostAdministrationFee( Account personalAccount, float administrationFee){}
 
         protected bool OperationsCollection( Account personalAccount, short operationsLimit, float costOperation, string[] s = null ) {
 
@@ -103,7 +98,8 @@ namespace AppCuentaBanca
 
         // create function that shows all the properties of the class
         public virtual void ShowAccountData() {
-            Console.WriteLine($"\nName: {this.name}");
+            Console.WriteLine($"\nType: {this.typeAccount}");
+            Console.WriteLine($"Name: {this.name}");
             Console.WriteLine($"Last name: {this.lastName}");
             Console.WriteLine($"Profession: {this.profession}");
             Console.WriteLine($"Address: {this.address}");
@@ -140,6 +136,7 @@ namespace AppCuentaBanca
 
         /* Declaring the variables that will be used in the class. */
         protected readonly DateTime dayCreateAccount = DateTime.Now;
+        protected string typeAccount;
 
         protected double balance { get; set; }
 

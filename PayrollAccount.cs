@@ -9,6 +9,8 @@ namespace AppCuentaBanca
         readonly int operationsLimit = 6;
         readonly float costOperation = 3000;
 
+        public PayrollAccount() { this.typeAccount = "Payroll Account"; }
+
         public override string ToString() {
             Console.Clear();
             Console.Write("Enter the name of the company: ");

@@ -9,6 +9,8 @@ namespace AppCuentaBanca
         readonly int operationsLimit = 6;
         readonly float costOperation = 3200;
 
+        public SavingsAccount() { this.typeAccount = "Savings Account"; }
+
         public override string ToString() {
             return "Savings-account".ToUpper();
         }

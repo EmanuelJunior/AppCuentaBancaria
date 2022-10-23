@@ -9,6 +9,8 @@ namespace AppCuentaBanca
         List<string> paymentMethods = new List<string>();
         int overdraftQuota;
 
+        public CurrentAccount() { this.typeAccount = "Current Account"; }
+
         public override string ToString() {
             this.overdraftQuota = this.CheckFieldIsNumber("How much is the overdraft?");
             int cant = this.CheckFieldIsNumber("How many payment methods do you have?");

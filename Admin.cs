@@ -242,62 +242,36 @@ namespace AppCuentaBanca
             Console.WriteLine($"\n===== { message } =====\n".ToUpper());
 
             int idNumber = Utils.CheckFieldIsNumber("Enter the id number");
+            bool foundTheAccount = false;
 
             // Create a predicate function for Consult Account
             Predicate<Account> condition = account => account.IdNumber == idNumber;
 
             // Find the account and consult it according to the condition
-
-            // Express Account
             Account account = expressAccount.Find( condition );
-            if ( account != null ) {
-                if (getDataAccount) return account;
 
-                account.ShowAccountData();
+            account = account == null ? payrollAccounts.Find( condition ) : account;
+            account = account == null ? savingsAccounts.Find( condition ) : account;
+            account = account == null ? currentAccounts.Find( condition ) : account;
+
+            // Validate that the account has been found
+            foundTheAccount = account != null && foundTheAccount == false ? true : false;
+
+            // Validate that the account has been found and show a message
+            if ( account == null && foundTheAccount == false) {
+                Console.WriteLine("\nThe account does not exist...".ToUpper());
                 Console.WriteLine("\nPress any key to continue...".ToUpper());
                 Console.ReadKey();
-
                 return null;
             }
 
-            // Payroll Account
-            account = payrollAccounts.Find( condition );
-            if ( account != null ) {
-                if (getDataAccount) return account;
-
-                account.ShowAccountData();
-                Console.WriteLine("\nPress any key to continue...".ToUpper());
-                Console.ReadKey();
-
-                return null;
-            }
-
-            // Savings Account
-            account = savingsAccounts.Find( condition );
-            if ( account != null ) {
-                if (getDataAccount) return account;
-
-                account.ShowAccountData();
-                Console.WriteLine("\nPress any key to continue...".ToUpper());
-                Console.ReadKey();
-
-                return null;
-            }
-
-            // Current Account
-            account = currentAccounts.Find( condition );
-            if ( account != null ) {
-                if (getDataAccount) return account;
-
-                account.ShowAccountData();
-                Console.WriteLine("\nPress any key to continue...".ToUpper());
-                Console.ReadKey();
-
-                return null;
-            }
+            // Return the account data
+            if (getDataAccount) return account;
             
-            Console.WriteLine("\nThe account does not exist...".ToUpper());
+            Console.WriteLine("\nThe account has been found...".ToUpper());
+            account.ShowAccountData();
             Console.WriteLine("\nPress any key to continue...".ToUpper());
+            Console.ReadKey();
             return null;
         }
 
