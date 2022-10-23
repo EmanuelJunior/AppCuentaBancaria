@@ -69,7 +69,7 @@ namespace AppCuentaBanca
                 if ( i == -1 ) throw new Exception("\nThe account does not exist...".ToUpper());
             }
 
-            Console.WriteLine("\nyou have been successfully logged in with the account...".ToUpper());
+            Console.WriteLine("\nYou have been successfully logged in with the account...".ToUpper());
             
             Console.WriteLine("\nPress any key to continue...".ToUpper());
             Console.ReadKey();
@@ -78,11 +78,10 @@ namespace AppCuentaBanca
         }
 
         // Personal account options menu
-        static public void OptionsPersonalAccount(){
+        public static void OptionsPersonalAccount(){
 
             // login to a personal account, if you don't find an account, ask for the info again
-            Account personalAccount = Admin.TryCodeUntilItWorks<Account>( "\nAn error was generated, please try again to continue".ToUpper(), null, LoginWithAccountNumber);
-            if ( personalAccount == null ) Console.WriteLine("Algo se jodio");
+            Account personalAccount = Utils.TryCodeUntilItWorks<Account>( "\nAn error was generated, please try again to continue".ToUpper(), null, LoginWithAccountNumber);
 
             Console.Clear();
             User.ShowMenuAccount();
@@ -93,7 +92,7 @@ namespace AppCuentaBanca
             {
                 case "1":
                     // Find the destination account to transfer money to
-                    Account targetAccount = Admin.TryCodeUntilItWorks<Account>( "\nAn error was generated, please try again to continue".ToUpper(), Admin.ConsultIndividualAccount, null, "Consult Account", true);
+                    Account targetAccount = Utils.TryCodeUntilItWorks<Account>( "\nAn error was generated, please try again to continue".ToUpper(), Admin.ConsultIndividualAccount, null, "Consult Account", true);
 
                     Console.Clear();
                     Console.Write("Enter the amount to transfer: ");

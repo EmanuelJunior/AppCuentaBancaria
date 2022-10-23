@@ -1,72 +1,23 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+// using System.Linq;
 
 namespace AppCuentaBanca
 {
-    public class Admin : Account
+    public class Admin
     {
         static protected List<CurrentAccount> currentAccounts = new List<CurrentAccount>();
         static protected List<SavingsAccount> savingsAccounts = new List<SavingsAccount>();
         static protected List<PayrollAccount> payrollAccounts = new List<PayrollAccount>();
         static protected List<ExpressAccount> expressAccount = new List<ExpressAccount>();
 
-        /* A method that is used to try to execute a code until it works, it is used to avoid errors in the
-        code. */
-        public static T TryCodeUntilItWorks<T>( 
-            string messageError, 
-            Func<string, bool, T> action, 
-            Func<T> emptyAction, 
-            string message = null, 
-            bool returnsAnAccount = false 
-        ) {
-            
-            bool isCorrect = false;
-            T valueToReturn = default(T);
-
-            while ( !isCorrect ) {
-                try {
-                    Console.Clear();
-
-                    if ( message == null && !returnsAnAccount ) valueToReturn = emptyAction();
-                    else valueToReturn = action(message, returnsAnAccount);
-
-                    isCorrect = true;
-                    return valueToReturn;
-                } catch ( Exception e ) {
-                    Console.Clear();
-                    Console.WriteLine(messageError);
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine("\nPress any key to continue...".ToUpper());
-                    Console.ReadKey();
-                    Console.Clear();
-                }
-            }
-
-            return valueToReturn;
-        }
-
-        static void MenuAdmin() {
-            Console.Clear();
-            Console.WriteLine("\n-------------------------------------- ");
-            Console.WriteLine("           APP Bank Account            ");
-            Console.WriteLine("-------------------------------------- ");
-            Console.WriteLine("\n| ADMINISTRATOR ---------------------- ");
-            Console.WriteLine("| 1. Create an account --------------- ");
-            Console.WriteLine("| 2. Consult an account -------------- ");
-            Console.WriteLine("| 3. Delete an account --------------- ");
-            Console.WriteLine("| 4. Consult all accounts ------------ ");
-            Console.WriteLine("| 5. Modify an accounts -------------- ");
-            Console.WriteLine("| 6. Exit ---------------------------- ");
-            Console.WriteLine("| ------------------------------------ ");
-        }
-
         public static void OptionsForAdmin() {
             bool keepRunningAdmin = true;
 
             while( keepRunningAdmin ) {
-                MenuAdmin();
-                int accountType = CheckFieldIsNumber("\nSelect an option".ToUpper());
+
+                UiAdmin.MenuAdmin();
+                int accountType = Utils.CheckFieldIsNumber("\nSelect an option".ToUpper());
 
                 switch( accountType ) {
                     case 1:
@@ -102,20 +53,10 @@ namespace AppCuentaBanca
             }
         }
 
-        static void ListAccountsChoose( string actionType ) {
-            Console.Clear();
-            Console.WriteLine($"\nwhat type of account do you want to {actionType}?: ".ToUpper());
-
-            Console.WriteLine($"\n1. If you want to {actionType} an EXPRESS ACCOUNT");
-            Console.WriteLine("2. If you want a PAYROLL ACCOUNT");
-            Console.WriteLine("3. If you prefer a SAVINGS ACCOUNT");
-            Console.WriteLine("4. If you want a CURRENT ACCOUNT\n");            
-        }
-
         static void SelectAccountTypeAndCreate() {
 
-            ListAccountsChoose("create");
-            int accountType = CheckFieldIsNumber("Select an option".ToUpper(), "CREATE", ListAccountsChoose);
+            UiAdmin.ListAccountsChoose("create");
+            int accountType = Utils.CheckFieldIsNumber("Select an option".ToUpper(), "CREATE", UiAdmin.ListAccountsChoose);
             Console.Clear();
 
             // Select the account type and create the new object instance
@@ -163,42 +104,17 @@ namespace AppCuentaBanca
             account.Password = Console.ReadLine();
             Console.Clear();
 
-            account.IdNumber = CheckFieldIsNumber("Id Number");
-            account.AccountNumber = CheckFieldIsNumber("Account Number");
-            account.Balance = CheckFieldIsNumber("Balance");
-            account.Phone = CheckFieldIsNumber("Cellphone");
-            account.Operations = CheckFieldIsNumber("Operations");
+            account.IdNumber = Utils.CheckFieldIsNumber("Id Number");
+            account.AccountNumber = Utils.CheckFieldIsNumber("Account Number");
+            account.Balance = Utils.CheckFieldIsNumber("Balance");
+            account.Phone = Utils.CheckFieldIsNumber("Cellphone");
+            account.Operations = Utils.CheckFieldIsNumber("Operations");
 
             // Fill in the individual properties of each type of account
             string accountType = account.ToString();
 
             // Save the new user in the corresponding list
             SaveTheNewAccount( accountType, account );
-        }
-
-        static int CheckFieldIsNumber( string message, string messageForMenu = null, Action<string> showMenu = null ) {
-            // Cycle to validate the field number
-            bool IsCorrect = false;
-            int field = 0;
-
-            while ( !IsCorrect ) {
-                try {
-                    if ( field == 0 ) {
-                        if ( showMenu != null && messageForMenu != null) showMenu(message);
-                        Console.Write($"{message}: ");
-                        
-                        field = int.Parse(Console.ReadLine());
-                        Console.Clear();
-                        IsCorrect = true;
-                    }
-                } catch ( Exception ) {
-                    Console.Clear();
-                    Console.WriteLine($"\nThe {message} number must be a number\n".ToUpper());
-                    IsCorrect = false;
-                }
-            }
-
-            return field;
         }
 
         static bool IsInformationCorrect( Account account ) {
@@ -253,8 +169,8 @@ namespace AppCuentaBanca
         static void DeleteAccount() {
 
             // Delete an account
-            ListAccountsChoose("delete");
-            int accountType = CheckFieldIsNumber("Select an option".ToUpper(), "DELETE", ListAccountsChoose);
+            UiAdmin.ListAccountsChoose("delete");
+            int accountType = Utils.CheckFieldIsNumber("Select an option".ToUpper(), "DELETE", UiAdmin.ListAccountsChoose);
             Console.Clear();
 
             // Ask the administrator for the id of the user you want to delete
@@ -269,18 +185,10 @@ namespace AppCuentaBanca
             // Find the account and delete it according to the condition
             switch (accountType)
             {
-                case 1:
-                    i = expressAccount.RemoveAll( condition );
-                    break;
-                case 2:
-                    i = payrollAccounts.RemoveAll( condition );
-                    break;
-                case 3:
-                    i = savingsAccounts.RemoveAll( condition );
-                    break;
-                case 4:
-                    i = currentAccounts.RemoveAll( condition );
-                    break;
+                case 1: i = expressAccount.RemoveAll( condition ); break;
+                case 2: i = payrollAccounts.RemoveAll( condition ); break;
+                case 3: i = savingsAccounts.RemoveAll( condition ); break;
+                case 4: i = currentAccounts.RemoveAll( condition ); break;
             }
             
             // Validate that the account has been deleted and show a message
@@ -294,8 +202,8 @@ namespace AppCuentaBanca
         static void ModifyAccount() {
 
             // Modify an account
-            ListAccountsChoose("modify");
-            int accountType = CheckFieldIsNumber("Select an option".ToUpper(), "MODIFY", ListAccountsChoose);
+            UiAdmin.ListAccountsChoose("modify");
+            int accountType = Utils.CheckFieldIsNumber("Select an option".ToUpper(), "MODIFY", UiAdmin.ListAccountsChoose);
             Console.Clear();
 
             // Ask the administrator for the id of the user you want to modify
@@ -333,7 +241,7 @@ namespace AppCuentaBanca
             Console.Clear();
             Console.WriteLine($"\n===== { message } =====\n".ToUpper());
 
-            int idNumber = CheckFieldIsNumber("Enter the id number");
+            int idNumber = Utils.CheckFieldIsNumber("Enter the id number");
 
             // Create a predicate function for Consult Account
             Predicate<Account> condition = account => account.IdNumber == idNumber;
@@ -396,8 +304,8 @@ namespace AppCuentaBanca
         static void ConsultAllAccounts() {
 
             // Consult all accounts
-            ListAccountsChoose("list");
-            int accountType = CheckFieldIsNumber("Consult All Accounts".ToUpper(), "LIST", ListAccountsChoose);
+            UiAdmin.ListAccountsChoose("list");
+            int accountType = Utils.CheckFieldIsNumber("Consult All Accounts".ToUpper(), "LIST", UiAdmin.ListAccountsChoose);
 
             switch (accountType)
             {
@@ -405,21 +313,29 @@ namespace AppCuentaBanca
                     Console.Clear();
                     Console.WriteLine("\n===== LIST OF EXPRESS ACCOUNTS =====\n".ToUpper());
                     expressAccount.ForEach( account => account.ShowAccountData() );
+                    Console.WriteLine("\nPress any key to continue...".ToUpper());
+                    Console.ReadKey();
                     break;
                 case 2:
                     Console.Clear();
                     Console.WriteLine("\n===== LIST OF PAYROLL ACCOUNTS =====\n".ToUpper());
                     payrollAccounts.ForEach( account => account.ShowAccountData() );
+                    Console.WriteLine("\nPress any key to continue...".ToUpper());
+                    Console.ReadKey();
                     break;
                 case 3:
                     Console.Clear();
                     Console.WriteLine("\n===== LIST OF SAVINGS ACCOUNTS =====\n".ToUpper());
                     savingsAccounts.ForEach( account => account.ShowAccountData() );
+                    Console.WriteLine("\nPress any key to continue...".ToUpper());
+                    Console.ReadKey();
                     break;
                 case 4:
                     Console.Clear();
                     Console.WriteLine("\n===== LIST OF CURRENT ACCOUNTS =====\n".ToUpper());
                     currentAccounts.ForEach( account => account.ShowAccountData() );
+                    Console.WriteLine("\nPress any key to continue...".ToUpper());
+                    Console.ReadKey();
                     break;
                 default:
                     Console.Clear();
@@ -428,6 +344,8 @@ namespace AppCuentaBanca
                     payrollAccounts.ForEach( account => account.ShowAccountData() );
                     savingsAccounts.ForEach( account => account.ShowAccountData() );
                     currentAccounts.ForEach( account => account.ShowAccountData() );
+                    Console.WriteLine("\nPress any key to continue...".ToUpper());
+                    Console.ReadKey();
                     break;
             }
         }

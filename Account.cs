@@ -3,7 +3,7 @@ using System;
 
 namespace AppCuentaBanca
 {
-    public class Account 
+    public class Account
     {
         // Documentar
         public override string ToString() {
@@ -55,8 +55,8 @@ namespace AppCuentaBanca
         // create a function that show the account balance
         public virtual void CheckBalance( Account personalAccount) {
             Console.WriteLine("Are you sure to check the account balance? y/n");
-            string answer = Console.ReadLine();
-            if ( answer == "y" || answer == "Y" ){
+            char answer = char.Parse(Console.ReadLine());
+            if ( answer == 'y' || answer == 'Y' ){
                 Console.WriteLine($"The account balance is: {personalAccount.balance}");
             } Console.WriteLine("Exit...");
         
@@ -81,7 +81,7 @@ namespace AppCuentaBanca
             // Calls the OperationsCollection method
         }
 
-        protected bool OperationsCollection( Account personalAccount, int operationsLimit, float costOperation, string[] s = null ) {
+        protected bool OperationsCollection( Account personalAccount, short operationsLimit, float costOperation, string[] s = null ) {
 
             if (personalAccount.operations < operationsLimit ) {
                 return false;
@@ -138,8 +138,6 @@ namespace AppCuentaBanca
             return field;
         }
 
-
-
         /* Declaring the variables that will be used in the class. */
         protected readonly DateTime dayCreateAccount = DateTime.Now;
 
@@ -152,9 +150,9 @@ namespace AppCuentaBanca
         protected string password { get; set; }
 
         protected int idNumber { get; set; }
-        protected int accountNumber { get; set; }
+        protected Int64 accountNumber { get; set; }
         protected int phone { get; set; }
-        protected int operations { get; set; }
+        protected Int32 operations { get; set; }
 
         public string Name { get => this.name; set => this.name = value; }
         public string LastName { get => this.lastName; set => this.lastName = value; }
@@ -163,9 +161,9 @@ namespace AppCuentaBanca
         public string Password { get => this.password; set => this.password = value; }
 
         public int IdNumber { get => this.idNumber; set => this.idNumber = value; }
-        public int AccountNumber { get => this.accountNumber; set => this.accountNumber = value; }
+        public Int64 AccountNumber { get => this.accountNumber; set => this.accountNumber = value; }
         public int Phone { get => this.phone; set => this.phone = value; }
-        public int Operations { get => this.operations; set => this.operations = value; }
+        public Int32 Operations { get => this.operations; set => this.operations = value; }
         public double Balance { get => this.balance; set => this.balance = value; }
     }
 }
