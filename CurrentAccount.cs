@@ -24,10 +24,8 @@ namespace AppCuentaBanca
             return "Current-account".ToUpper();
         }
 
-        public override void ShowAccountData() {
-            Console.WriteLine("\n====== Account data: ======".ToUpper());
+        public override void ShowAccountData( bool showType = false ) {
             base.ShowAccountData();
-
             Console.WriteLine($"Overdraft quota: {this.overdraftQuota}");
             Console.WriteLine($"\nPayment methods: ");
             
@@ -74,5 +72,12 @@ namespace AppCuentaBanca
             }
 
         }
+
+        public override TimeSpan CostAdministrationFee( ){
+
+            TimeSpan interval = base.CostAdministrationFee();
+            return interval;
+        }
+
     }
 }

@@ -27,6 +27,7 @@ namespace AppCuentaBanca
                 Predicate<Account> condition = null;
                 
                 if ( typeAccountLogin != "root" ) {
+
                     Console.Clear();
                     Console.Write("Write the id number to login: ");
                     idNumberToFind = int.Parse(Console.ReadLine());
@@ -78,47 +79,69 @@ namespace AppCuentaBanca
         }
 
         // Personal account options menu
-        public static void OptionsPersonalAccount(){
+        public static void OptionsPersonalAccount() {
 
             // login to a personal account, if you don't find an account, ask for the info again
             Account personalAccount = Utils.TryCodeUntilItWorks<Account>( "\nAn error was generated, please try again to continue".ToUpper(), null, LoginWithAccountNumber);
+            bool continueRunning = true;
+            bool hidePressKey = false;
 
-            Console.Clear();
-            User.ShowMenuAccount();
-            Console.Write("\nEnter the operation to do: ");
-            string operationToDo = Console.ReadLine();
+            while ( continueRunning ) {
 
-            switch (operationToDo)
-            {
-                case "1":
-                    // Find the destination account to transfer money to
-                    Account targetAccount = Utils.TryCodeUntilItWorks<Account>( "\nAn error was generated, please try again to continue".ToUpper(), Admin.ConsultIndividualAccount, null, "Consult Account", true);
+                Console.Clear();
+                User.ShowMenuAccount();
+                Console.Write("\nEnter the operation to do: ");
+                string operationToDo = Console.ReadLine();
 
-                    Console.Clear();
-                    Console.Write("Enter the amount to transfer: ");
+                switch (operationToDo)
+                {
+                    case "1":
+                        // Find the destination account to transfer money to
+                        Account targetAccount = Utils.TryCodeUntilItWorks<Account>( "\nAn error was generated, please try again to continue".ToUpper(), Admin.ConsultIndividualAccount, null, "Consult Account", true);
 
-                    float amountToTransfer = float.Parse(Console.ReadLine());
-                    personalAccount.TransferMoney( personalAccount, targetAccount, amountToTransfer );
-                    break;
-                case "2":
-                    // Calls the method that performs a withdrawal 
-                    personalAccount.Withdraw( personalAccount, 100f );
-                    break;
-                case "3":
-                    // Calls the method that performs a deposit
-                    Console.Clear();
-                    Console.Write("Enter the amount to make deposit: ");
-                    int amountToDeposit = int.Parse(Console.ReadLine());
+                        Console.Clear();
+                        Console.Write("Enter the amount to transfer: ");
 
-                    personalAccount.MakeDeposit( personalAccount, amountToDeposit);
-                    break;
-                case "4":
-                    // Calls the method that show the account balance
-                    personalAccount.CheckBalance( personalAccount );
-                    break;
-                default:
-                    // 
-                    break;
+                        float amountToTransfer = float.Parse(Console.ReadLine());
+                        personalAccount.TransferMoney( personalAccount, targetAccount, amountToTransfer );
+                        break;
+                    case "2":
+                        // Calls the method that performs a withdrawal 
+                        personalAccount.Withdraw( personalAccount, 100f );
+                        break;
+                    case "3":
+                        // Calls the method that performs a deposit
+                        Console.Clear();
+                        Console.Write("Enter the amount to make deposit: ");
+                        int amountToDeposit = int.Parse(Console.ReadLine());
+
+                        personalAccount.MakeDeposit( personalAccount, amountToDeposit);
+                        break;
+                    case "4":
+                        // Calls the method that show the account balance
+                        Console.Clear();
+                        personalAccount.CheckBalance( personalAccount );
+                        break;
+                    case "5":
+                        // Calls the method that show the account balance
+                        Console.Clear();
+                        personalAccount.CostAdministrationFee();
+                        break;
+                    case "6":
+                        // if you want to log out
+                        personalAccount = Utils.TryCodeUntilItWorks<Account>( "\nAn error was generated, please try again to continue".ToUpper(), null, LoginWithAccountNumber);
+                        hidePressKey = true;
+                        break;
+                    case "7":
+                        // if you want to exit the app
+                        continueRunning = false;
+                        break;
+                }
+                
+                if ( !hidePressKey ) {
+                    Console.WriteLine("\nPress any key to continue...".ToUpper());
+                    Console.ReadKey();
+                }
             }
         }
     }

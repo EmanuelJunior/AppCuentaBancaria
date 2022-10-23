@@ -1,6 +1,21 @@
 using System.Collections.Generic;
 using System;
 
+using System.Threading;
+using System.Threading.Tasks;
+
+// Directive for use Anonymous
+using System.Linq;
+
+// Directive for use the class Random
+using System.Security.Cryptography;
+
+// Directive for use the class Stopwatch
+using System.Diagnostics;
+
+// Directive for use the class DateTime
+using System.Globalization;
+
 namespace AppCuentaBanca
 {
     public class Account
@@ -49,9 +64,10 @@ namespace AppCuentaBanca
             if (amount > 0) {
                 personalAccount.balance += amount;
                 Console.WriteLine($"\nThe new balance is: { personalAccount.balance }...");
+            } else {
+                Console.WriteLine("\nDeposit FAILED...");
             } 
             
-            Console.WriteLine("\nDeposit FAILED...");
         }
 
         // create a function that show the account balance
@@ -66,27 +82,27 @@ namespace AppCuentaBanca
             Console.WriteLine($"The account balance is: {personalAccount.balance}");  
         }
 
-        protected virtual void BalanceReport( Account personalAccount, float administrationFee ) {
-            Console.WriteLine("\nThese are the costs generated throughout the month");
+        // Method that calculate the Administration Fee (only declared)
+        public virtual TimeSpan CostAdministrationFee() {
+            // Calculates the administration fee and the sample
+            DateTime today = DateTime.Now;
+            TimeSpan interval = today - dayCreateAccount;
 
-
-            // Calls the OperationsCollection method
+            return interval;
         }
 
-        // Method that calculate the Administration Fee (only declared)
-        protected virtual void CostAdministrationFee( Account personalAccount, float administrationFee){}
-
+        // Method that calculate the OperationsCollection
         protected bool OperationsCollection( Account personalAccount, short operationsLimit, float costOperation, string[] s = null ) {
 
             if (personalAccount.operations < operationsLimit ) {
                 return false;
             }
 
-            foreach (string i in s){
+            /*  foreach (string i in s){
                 if (true) {
                     Console.WriteLine(i);
                 }
-            }
+            } */
 
             int chargePerOperation = personalAccount.operations - operationsLimit;
             float collection = chargePerOperation * costOperation;
@@ -95,10 +111,18 @@ namespace AppCuentaBanca
             
             return true;
         }
+        protected virtual void BalanceReport( Account personalAccounte ) {
+            Console.WriteLine("\nThese are the costs generated throughout the month");
+
+            // Calls the CostAdministrationFee method
+            CostAdministrationFee();
+
+        }
 
         // create function that shows all the properties of the class
-        public virtual void ShowAccountData() {
-            Console.WriteLine($"\nType: {this.typeAccount}");
+        public virtual void ShowAccountData( bool showType = false ) {
+            if ( showType ) Console.WriteLine($"\nType: ".ToUpper() + this.typeAccount);
+            Console.WriteLine($"\nCreation Date: {this.dayCreateAccount}");
             Console.WriteLine($"Name: {this.name}");
             Console.WriteLine($"Last name: {this.lastName}");
             Console.WriteLine($"Profession: {this.profession}");

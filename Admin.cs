@@ -17,7 +17,7 @@ namespace AppCuentaBanca
             while( keepRunningAdmin ) {
 
                 UiAdmin.MenuAdmin();
-                int accountType = Utils.CheckFieldIsNumber("\nSelect an option".ToUpper());
+                int accountType = Utils.CheckFieldIsNumber("\nSelect an option".ToUpper(), null, null, UiAdmin.MenuAdmin);
 
                 switch( accountType ) {
                     case 1:
@@ -285,39 +285,39 @@ namespace AppCuentaBanca
             {
                 case 1:
                     Console.Clear();
-                    Console.WriteLine("\n===== LIST OF EXPRESS ACCOUNTS =====\n".ToUpper());
+                    Console.WriteLine("\n===== LIST OF EXPRESS ACCOUNTS =====".ToUpper());
                     expressAccount.ForEach( account => account.ShowAccountData() );
                     Console.WriteLine("\nPress any key to continue...".ToUpper());
                     Console.ReadKey();
                     break;
                 case 2:
                     Console.Clear();
-                    Console.WriteLine("\n===== LIST OF PAYROLL ACCOUNTS =====\n".ToUpper());
+                    Console.WriteLine("\n===== LIST OF PAYROLL ACCOUNTS =====".ToUpper());
                     payrollAccounts.ForEach( account => account.ShowAccountData() );
                     Console.WriteLine("\nPress any key to continue...".ToUpper());
                     Console.ReadKey();
                     break;
                 case 3:
                     Console.Clear();
-                    Console.WriteLine("\n===== LIST OF SAVINGS ACCOUNTS =====\n".ToUpper());
+                    Console.WriteLine("\n===== LIST OF SAVINGS ACCOUNTS =====".ToUpper());
                     savingsAccounts.ForEach( account => account.ShowAccountData() );
                     Console.WriteLine("\nPress any key to continue...".ToUpper());
                     Console.ReadKey();
                     break;
                 case 4:
                     Console.Clear();
-                    Console.WriteLine("\n===== LIST OF CURRENT ACCOUNTS =====\n".ToUpper());
+                    Console.WriteLine("\n===== LIST OF CURRENT ACCOUNTS =====".ToUpper());
                     currentAccounts.ForEach( account => account.ShowAccountData() );
                     Console.WriteLine("\nPress any key to continue...".ToUpper());
                     Console.ReadKey();
                     break;
-                default:
+                case 5:
                     Console.Clear();
-                    Console.WriteLine("\n===== LIST OF ALL ACCOUNTS =====\n".ToUpper());
-                    expressAccount.ForEach( account => account.ShowAccountData() );
-                    payrollAccounts.ForEach( account => account.ShowAccountData() );
-                    savingsAccounts.ForEach( account => account.ShowAccountData() );
-                    currentAccounts.ForEach( account => account.ShowAccountData() );
+                    Console.WriteLine("\n===== LIST OF ALL ACCOUNTS =====".ToUpper());
+                    expressAccount.ForEach( account => account.ShowAccountData( true ) );
+                    payrollAccounts.ForEach( account => account.ShowAccountData( true ) );
+                    savingsAccounts.ForEach( account => account.ShowAccountData( true ) );
+                    currentAccounts.ForEach( account => account.ShowAccountData( true ) );
                     Console.WriteLine("\nPress any key to continue...".ToUpper());
                     Console.ReadKey();
                     break;

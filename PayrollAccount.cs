@@ -11,6 +11,12 @@ namespace AppCuentaBanca
 
         public PayrollAccount() { this.typeAccount = "Payroll Account"; }
 
+        public override void ShowAccountData( bool showType = false ) {
+            base.ShowAccountData();
+            Console.WriteLine($"Company name: {this.companyName}");
+            Console.WriteLine($"Company NIT: {this.companyNIT}");
+        }
+
         public override string ToString() {
             Console.Clear();
             Console.Write("Enter the name of the company: ");

@@ -26,7 +26,8 @@ namespace AppCuentaBanca
             Console.WriteLine($"\n1. If you want to {actionType} an EXPRESS ACCOUNT");
             Console.WriteLine("2. If you want a PAYROLL ACCOUNT");
             Console.WriteLine("3. If you prefer a SAVINGS ACCOUNT");
-            Console.WriteLine("4. If you want a CURRENT ACCOUNT\n");            
+            Console.WriteLine("4. If you want a CURRENT ACCOUNT");            
+            Console.WriteLine("5. If you want to see all the ACCOUNTS\n");            
         }
     }
 }

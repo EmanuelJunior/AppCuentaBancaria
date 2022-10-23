@@ -24,27 +24,31 @@ namespace AppCuentaBanca
             Console.WriteLine($"\nTransferred: {amount}, Remaining money: {this.balance}");
             Console.WriteLine("\nThe withdrawal was successful...\n".ToUpper());
             return true;
-        }
+        }        
 
-        protected override void BalanceReport( Account personalAccount, float administrationFee ) {
+        // Logic specific of the metohd ConstAdmistrationFee for the ExpressAcount
+        public override TimeSpan CostAdministrationFee( ){
+
+            TimeSpan interval = base.CostAdministrationFee();
+            double month = 0;
+
+            // Calculate the number of months
+            if (interval.Seconds >= 60) {
+                month = Math.Truncate((double) interval.Seconds / 60);
+                this.balance -= administrationFee * month;
+                Console.WriteLine($"\nAdministration fee charged every minute (1)");
+                Console.WriteLine($"\nAdministration Fee: {administrationFee * month}");
+                Console.WriteLine($"\nNew Balance: {this.balance}");
+                
+            } else { Console.WriteLine("No outstanding dues"); }
+
+            return interval;
+        }
+        
+        /* protected override void BalanceReport( Account personalAccount, float administrationFee ) {
             base.BalanceReport(personalAccount, administrationFee);
-        }
+        } */
 
-        protected override void CostAdministrationFee( Account personalAccount, float administrationFee ){
-            // Calculates the administration fee and the sample
-            DateTime today = DateTime.Now;
-            TimeSpan interval = today - dayCreateAccount;
-            double month;
-
-            if (interval.Days >= 30) {
-
-                month = Math.Truncate((double) interval.Days / 30);
-                personalAccount.Balance -= administrationFee * month;
-
-                Console.WriteLine($"Administration Fee: {administrationFee * month}");
-
-            }
-        }
     }
 }
 

@@ -38,7 +38,7 @@ namespace AppCuentaBanca
             return valueToReturn;
         }
 
-        public static int CheckFieldIsNumber( string message, string messageForMenu = null, Action<string> showMenu = null ) {
+        public static int CheckFieldIsNumber( string message, string messageForMenu = null, Action<string> showMenu = null, Action showMenuWithoutParameters = null) {
             // Cycle to validate the field number
             bool IsCorrect = false;
             int field = 0;
@@ -47,6 +47,7 @@ namespace AppCuentaBanca
                 try {
                     if ( field == 0 ) {
                         if ( showMenu != null && messageForMenu != null) showMenu(message);
+                        else if ( showMenuWithoutParameters != null ) showMenuWithoutParameters();
                         Console.Write($"{message}: ");
                         
                         field = int.Parse(Console.ReadLine());

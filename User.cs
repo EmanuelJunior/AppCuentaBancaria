@@ -24,6 +24,7 @@ namespace AppCuentaBanca
             Console.WriteLine("\n-------------------------------------");
             Console.WriteLine("       Options - Personal Account      ");
             Console.WriteLine("---------------------------------------");
+            Console.WriteLine("\n| User Name -------------------------- |");
             
             Console.WriteLine("\nSelect a option");
             Console.WriteLine("-----------------------------");
@@ -32,6 +33,8 @@ namespace AppCuentaBanca
             Console.WriteLine("3. If you want to make a deposit");
             Console.WriteLine("4. To check the balance of you account");
             Console.WriteLine("5. If you want to see the operations report");
+            Console.WriteLine("6. If you want to log out\n");
+            Console.WriteLine("7. If you want to exit\n");
         }
     }
 }
