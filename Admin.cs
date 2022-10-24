@@ -108,7 +108,6 @@ namespace AppCuentaBanca
             account.AccountNumber = Utils.CheckFieldIsNumber("Account Number");
             account.Balance = Utils.CheckFieldIsNumber("Balance");
             account.Phone = Utils.CheckFieldIsNumber("Cellphone");
-            account.Operations = Utils.CheckFieldIsNumber("Operations");
 
             // Fill in the individual properties of each type of account
             string accountType = account.ToString();

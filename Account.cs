@@ -28,28 +28,28 @@ namespace AppCuentaBanca
         }
 
         // Transfer money from one account to another
-        public virtual bool TransferMoney(Account personalAccount, Account targetAccount, float amount) {
+        public virtual bool TransferMoney(Account targetAccount, int amount) {
 
-            if ( amount <= 0 || personalAccount.balance < amount ) 
+            if ( amount <= 0 || this.balance < amount ) 
             {
                 Console.WriteLine("\nThe transfer was erroneous...".ToUpper());
                 return false;
             }
 
-            personalAccount.balance -= amount;
+            this.balance -= amount;
             targetAccount.balance += amount;
 
             // Prints the result of the transfer
-            Console.WriteLine($"\nAmount: {amount} - Personal Balance: {personalAccount.balance}");
+            Console.WriteLine($"\nAmount: {amount} - Personal Balance: {this.balance}");
             Console.WriteLine($"Amount: {amount} - Target Balance: {targetAccount.balance}");
             return true;
         }
         
-        public virtual bool Withdraw( Account personalAccount, float amount ) {
+        public virtual bool Withdraw( float amount ) {
 
             // Withdraw money from the account
             //
-            if ( personalAccount.balance < amount ) {
+            if ( this.balance < amount ) {
                 Console.WriteLine("The money cannot be withdrawn, the amount is greater than the available balance."); 
                 return false;
             }
@@ -59,27 +59,27 @@ namespace AppCuentaBanca
         public virtual bool Withdraw() { return false; }
 
         // Function that enter a specific amount to the personal account
-        public virtual void MakeDeposit( Account personalAccount, float amount) {
+        public virtual void MakeDeposit( int amount) {
 
-            if (amount > 0) {
-                personalAccount.balance += amount;
-                Console.WriteLine($"\nThe new balance is: { personalAccount.balance }...");
-            } else {
+            if (amount <= 0) {
                 Console.WriteLine("\nDeposit FAILED...");
-            } 
-            
+                return;
+            }
+
+            this.balance += amount;
+            Console.WriteLine($"\nThe new balance is: ${ Utils.TransformNumberToMoney( this.balance ) }...");
         }
 
         // create a function that show the account balance
-        public virtual void CheckBalance( Account personalAccount) {
-            Console.WriteLine("Are you sure to check the account balance? y/n");
-            char answer = char.Parse(Console.ReadLine());
-            if ( answer != 'y' || answer != 'Y' ){
+        public virtual void CheckBalance() {
+            Console.Write("Are you sure to check the account balance? y/n: ");
+            string answer = Console.ReadLine();
+            if ( answer != "y" && answer != "Y" ){
                 Console.WriteLine("Exit...");
                 return;
             } 
             
-            Console.WriteLine($"The account balance is: {personalAccount.balance}");  
+            Console.WriteLine($"\nThe account balance is: ${Utils.TransformNumberToMoney( this.balance )}"); 
         }
 
         // Method that calculate the Administration Fee (only declared)
@@ -92,9 +92,9 @@ namespace AppCuentaBanca
         }
 
         // Method that calculate the OperationsCollection
-        protected bool OperationsCollection( Account personalAccount, short operationsLimit, float costOperation, string[] s = null ) {
+        protected bool OperationsCollection( short operationsLimit, int costOperation, string[] s = null ) {
 
-            if (personalAccount.operations < operationsLimit ) {
+            if (this.operations < operationsLimit ) {
                 return false;
             }
 
@@ -104,19 +104,18 @@ namespace AppCuentaBanca
                 }
             } */
 
-            int chargePerOperation = personalAccount.operations - operationsLimit;
-            float collection = chargePerOperation * costOperation;
-            personalAccount.balance -= collection;
-            personalAccount.operations = operationsLimit;
+            int chargePerOperation = this.operations - operationsLimit;
+            int collection = chargePerOperation * costOperation;
+            this.balance -= collection;
+            this.operations = operationsLimit;
             
             return true;
         }
-        protected virtual void BalanceReport( Account personalAccounte ) {
+        protected virtual void BalanceReport() {
             Console.WriteLine("\nThese are the costs generated throughout the month");
 
             // Calls the CostAdministrationFee method
             CostAdministrationFee();
-
         }
 
         // create function that shows all the properties of the class
@@ -162,7 +161,7 @@ namespace AppCuentaBanca
         protected readonly DateTime dayCreateAccount = DateTime.Now;
         protected string typeAccount;
 
-        protected double balance { get; set; }
+        protected int balance { get; set; }
 
         protected string name { get; set; }
         protected string lastName { get; set; }
@@ -185,6 +184,6 @@ namespace AppCuentaBanca
         public Int64 AccountNumber { get => this.accountNumber; set => this.accountNumber = value; }
         public int Phone { get => this.phone; set => this.phone = value; }
         public Int32 Operations { get => this.operations; set => this.operations = value; }
-        public double Balance { get => this.balance; set => this.balance = value; }
+        public int Balance { get => this.balance; set => this.balance = value; }
     }
 }

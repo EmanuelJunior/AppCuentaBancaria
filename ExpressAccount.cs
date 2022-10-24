@@ -4,7 +4,7 @@ namespace AppCuentaBanca
 {
     public class ExpressAccount : Account
     {
-        readonly float administrationFee = 12500f;
+        readonly int administrationFee = 12500;
         
         public ExpressAccount() { this.typeAccount = "Express Account"; }
 
@@ -12,12 +12,21 @@ namespace AppCuentaBanca
             return "Express-account".ToUpper();
         }
 
+        // Count of operations (TransferMoney)
+        public override bool TransferMoney(Account targetAccount, int amount) {
+            bool executeTransfer = base.TransferMoney( targetAccount, amount);
+            if (executeTransfer != true) return false;
+            
+            this.Operations += 1;
+            return true;
+        }
+
         public override bool Withdraw() {
             // Ask for the amount to withdraw
             Console.Write("How much is the amount you want to withdraw?: ");
-            float amount = float.Parse(Console.ReadLine());
+            int amount = int.Parse(Console.ReadLine());
 
-            bool moneyCanBeWithdraw = base.Withdraw( this, amount );
+            bool moneyCanBeWithdraw = base.Withdraw( amount );
             if ( !moneyCanBeWithdraw ) return false;
             
             this.balance -= amount;
@@ -32,15 +41,18 @@ namespace AppCuentaBanca
             TimeSpan interval = base.CostAdministrationFee();
             double month = 0;
 
+            Console.WriteLine($"The number of operations executed is: {this.operations}");
+            
             // Calculate the number of months
             if (interval.Seconds >= 60) {
                 month = Math.Truncate((double) interval.Seconds / 60);
-                this.balance -= administrationFee * month;
+                this.balance -= administrationFee * int.Parse( month.ToString() );
+
                 Console.WriteLine($"\nAdministration fee charged every minute (1)");
                 Console.WriteLine($"\nAdministration Fee: {administrationFee * month}");
                 Console.WriteLine($"\nNew Balance: {this.balance}");
                 
-            } else { Console.WriteLine("No outstanding dues"); }
+            } else { Console.WriteLine("\nNo outstanding dues"); }
 
             return interval;
         }

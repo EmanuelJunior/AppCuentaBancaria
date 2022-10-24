@@ -4,6 +4,30 @@ namespace AppCuentaBanca
 {
     public class Utils
     {
+
+        // Transform a number to money format
+        static public string TransformNumberToMoney( int num ) {
+
+            string money = "";
+            string numString = num.ToString();
+            int cant = numString.Length;
+            int count = 0;
+
+            for (int i = cant - 1; i >= 0; i--) {
+                money += numString[i];
+                count++;
+                if (count == 3 && i != 0) {
+                    money += ".";
+                    count = 0;
+                }
+            }
+
+            string moneyReverse = "";
+            for (int i = money.Length - 1; i >= 0; i--) moneyReverse += money[i];
+
+            return moneyReverse;
+        }
+
         /* A method that is used to try to execute a code until it works, it is used to avoid errors in the
         code. */
         public static T TryCodeUntilItWorks<T>( 

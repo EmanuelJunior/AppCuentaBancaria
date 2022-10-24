@@ -19,12 +19,13 @@ namespace AppCuentaBanca
             Console.WriteLine("4. If you want a CURRENT ACCOUNT\n");
         }
 
-        static public void ShowMenuAccount() {
+        static public void ShowMenuAccount( string userName, int balance ) {
             Console.Clear();
             Console.WriteLine("\n-------------------------------------");
             Console.WriteLine("       Options - Personal Account      ");
             Console.WriteLine("---------------------------------------");
-            Console.WriteLine("\n| User Name -------------------------- |");
+            Console.WriteLine($"\n| User: {userName} --------------------------");
+            Console.WriteLine($"| Balance: ${Utils.TransformNumberToMoney( balance )} --------------------------");
             
             Console.WriteLine("\nSelect a option");
             Console.WriteLine("-----------------------------");

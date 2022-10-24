@@ -89,7 +89,7 @@ namespace AppCuentaBanca
             while ( continueRunning ) {
 
                 Console.Clear();
-                User.ShowMenuAccount();
+                User.ShowMenuAccount( personalAccount.Name, personalAccount.Balance );
                 Console.Write("\nEnter the operation to do: ");
                 string operationToDo = Console.ReadLine();
 
@@ -102,12 +102,12 @@ namespace AppCuentaBanca
                         Console.Clear();
                         Console.Write("Enter the amount to transfer: ");
 
-                        float amountToTransfer = float.Parse(Console.ReadLine());
-                        personalAccount.TransferMoney( personalAccount, targetAccount, amountToTransfer );
+                        int amountToTransfer = int.Parse(Console.ReadLine());
+                        personalAccount.TransferMoney( targetAccount, amountToTransfer );
                         break;
                     case "2":
                         // Calls the method that performs a withdrawal 
-                        personalAccount.Withdraw( personalAccount, 100f );
+                        personalAccount.Withdraw( 100f );
                         break;
                     case "3":
                         // Calls the method that performs a deposit
@@ -115,12 +115,12 @@ namespace AppCuentaBanca
                         Console.Write("Enter the amount to make deposit: ");
                         int amountToDeposit = int.Parse(Console.ReadLine());
 
-                        personalAccount.MakeDeposit( personalAccount, amountToDeposit);
+                        personalAccount.MakeDeposit( amountToDeposit);
                         break;
                     case "4":
                         // Calls the method that show the account balance
                         Console.Clear();
-                        personalAccount.CheckBalance( personalAccount );
+                        personalAccount.CheckBalance();
                         break;
                     case "5":
                         // Calls the method that show the account balance
@@ -135,6 +135,9 @@ namespace AppCuentaBanca
                     case "7":
                         // if you want to exit the app
                         continueRunning = false;
+                        break;
+                    default: 
+                        Console.WriteLine("The operation does not exist");
                         break;
                 }
                 

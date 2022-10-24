@@ -38,9 +38,9 @@ namespace AppCuentaBanca
             try {
                 // Ask for the amount to withdraw
                 Console.Write("How much is the amount you want to withdraw?: ");
-                float amount = float.Parse(Console.ReadLine());
+                int amount = int.Parse(Console.ReadLine());
 
-                bool moneyCanBeWithdraw = base.Withdraw( this, amount );
+                bool moneyCanBeWithdraw = base.Withdraw( amount );
                 if ( !moneyCanBeWithdraw ) throw new Exception("The money cannot be withdrawn, the amount is greater than the available balance.");
                 
                 this.balance -= amount;
@@ -59,7 +59,7 @@ namespace AppCuentaBanca
                 }
 
                 Console.Write("How much is the amount you want to loan?: ");
-                float loanAmount = float.Parse(Console.ReadLine());
+                int loanAmount = int.Parse(Console.ReadLine());
 
                 if ( loanAmount > overdraftQuota ) { 
                     Console.Write("The loan amount is greater than the overdraft quota."); 

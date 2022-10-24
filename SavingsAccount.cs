@@ -16,15 +16,14 @@ namespace AppCuentaBanca
         }
 
         // Methods
-        // Execute the method of the Account class and add one for each operation.
-        public override bool TransferMoney(Account personalAccount, Account targetAccount, float amount) {
-            bool executeTransfer = base.TransferMoney(personalAccount, targetAccount, amount);
-            if (executeTransfer != true) return false;
-            
-            personalAccount.Operations += 1;
-            return true;
-        }
 
         // Counts the number of operations performed after the free limit
+        public override bool TransferMoney(Account targetAccount, int amount) {
+            bool executeTransfer = base.TransferMoney( targetAccount, amount);
+            if (executeTransfer != true) return false;
+            
+            this.Operations += 1;
+            return true;
+        }
     }
 }
