@@ -19,6 +19,14 @@ namespace AppCuentaBanca
             Console.WriteLine("4. If you want a CURRENT ACCOUNT\n");
         }
 
+        static public void ShowHeaderForLogin() {
+            Console.Clear();
+            Console.WriteLine("\n-------------------------------------");
+            Console.WriteLine("           APP Bank Account          ");
+            Console.WriteLine("-------------------------------------");
+            Console.WriteLine("\n| LOGIN --------------------------- |");
+        }
+
         static public void ShowMenuAccount( string userName, int balance ) {
             Console.Clear();
             Console.WriteLine("\n-------------------------------------");

@@ -29,11 +29,15 @@ namespace AppCuentaBanca
                 if ( typeAccountLogin != "root" ) {
 
                     Console.Clear();
-                    Console.Write("Write the id number to login: ");
+                    User.ShowHeaderForLogin();
+                    Console.Write("\nWrite the id number to login: ");
                     idNumberToFind = int.Parse(Console.ReadLine());
 
+                    Console.Write("Write the password to login: ");
+                    string passwordToFind = Utils.ReadPassword();
+
                     // Create a predicate function for find Account
-                    condition = account => account.IdNumber == idNumberToFind;
+                    condition = account => account.IdNumber == idNumberToFind && account.Password == passwordToFind;
                     isLoggedIn = true;
                     i = 0;
                 }
@@ -70,7 +74,7 @@ namespace AppCuentaBanca
                 if ( i == -1 ) throw new Exception("\nThe account does not exist...".ToUpper());
             }
 
-            Console.WriteLine("\nYou have been successfully logged in with the account...".ToUpper());
+            Console.WriteLine("\n\nYou have been successfully logged in with the account...".ToUpper());
             
             Console.WriteLine("\nPress any key to continue...".ToUpper());
             Console.ReadKey();
@@ -125,7 +129,7 @@ namespace AppCuentaBanca
                     case "5":
                         // Calls the method that show the account balance
                         Console.Clear();
-                        personalAccount.CostAdministrationFee();
+                        personalAccount.BalanceReport();
                         break;
                     case "6":
                         // if you want to log out

@@ -51,11 +51,16 @@ namespace AppCuentaBanca
                 Console.WriteLine($"\nAdministration fee charged every minute (1)");
                 Console.WriteLine($"\nAdministration Fee: {administrationFee * month}");
                 Console.WriteLine($"\nNew Balance: {this.balance}");
-                
-            } else { Console.WriteLine("\nNo outstanding dues"); }
+            }   
+            else { 
+                Console.WriteLine($"\n{60 - interval.Seconds} seconds left to collect the fee");
+                Console.WriteLine("\nNo outstanding dues".ToUpper());
+            }
 
             return interval;
         }
+
+
         
         /* protected override void BalanceReport( Account personalAccount, float administrationFee ) {
             base.BalanceReport(personalAccount, administrationFee);

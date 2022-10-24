@@ -78,7 +78,6 @@ namespace AppCuentaBanca
                 Console.WriteLine("Exit...");
                 return;
             } 
-            
             Console.WriteLine($"\nThe account balance is: ${Utils.TransformNumberToMoney( this.balance )}"); 
         }
 
@@ -92,30 +91,13 @@ namespace AppCuentaBanca
         }
 
         // Method that calculate the OperationsCollection
-        protected bool OperationsCollection( short operationsLimit, int costOperation, string[] s = null ) {
-
-            if (this.operations < operationsLimit ) {
-                return false;
-            }
-
-            /*  foreach (string i in s){
-                if (true) {
-                    Console.WriteLine(i);
-                }
-            } */
-
-            int chargePerOperation = this.operations - operationsLimit;
-            int collection = chargePerOperation * costOperation;
-            this.balance -= collection;
-            this.operations = operationsLimit;
-            
-            return true;
-        }
-        protected virtual void BalanceReport() {
+        public virtual void OperationsCollection() { }
+        public virtual void BalanceReport() {
             Console.WriteLine("\nThese are the costs generated throughout the month");
 
             // Calls the CostAdministrationFee method
             CostAdministrationFee();
+            OperationsCollection();
         }
 
         // create function that shows all the properties of the class
@@ -126,11 +108,11 @@ namespace AppCuentaBanca
             Console.WriteLine($"Last name: {this.lastName}");
             Console.WriteLine($"Profession: {this.profession}");
             Console.WriteLine($"Address: {this.address}");
-            Console.WriteLine($"Password: {this.password}");
+            Console.WriteLine($"Password: { Utils.ReplaceLettersWithAsterisks( this.password ) }");
             Console.WriteLine($"ID number: {this.idNumber}");
             Console.WriteLine($"Account number: {this.accountNumber}");
             Console.WriteLine($"Operations: {this.operations}");
-            Console.WriteLine($"Balance: {this.balance}");
+            Console.WriteLine($"Balance: ${Utils.TransformNumberToMoney( this.balance )}");
             Console.WriteLine($"Phone: {this.phone}");
         }
 

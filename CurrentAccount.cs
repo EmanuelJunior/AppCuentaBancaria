@@ -79,5 +79,7 @@ namespace AppCuentaBanca
             return interval;
         }
 
+        // si el timespan esta entre 0 y 30 pregunta por el numero de movimientos 
+
     }
 }

@@ -99,11 +99,28 @@ namespace AppCuentaBanca
             Console.Write("Address: ");
             account.Address = Console.ReadLine();
 
-            Console.Clear();
-            Console.Write("Password: ");
-            account.Password = Console.ReadLine();
-            Console.Clear();
+            bool isPasswordEqual = false;
 
+            while( !isPasswordEqual ) {
+                Console.Clear();
+                Console.Write("Password: ");
+                account.Password = Utils.ReadPassword();
+
+                Console.Clear();
+                Console.Write("Confirm password: ");
+                string confirmPassword = Utils.ReadPassword();
+
+                if ( account.Password == confirmPassword ) 
+                    isPasswordEqual = true;
+                else {
+                    Console.Clear();
+                    Console.WriteLine("The passwords are not equal");
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ReadKey();
+                }
+            }
+            
+            Console.Clear();
             account.IdNumber = Utils.CheckFieldIsNumber("Id Number");
             account.AccountNumber = Utils.CheckFieldIsNumber("Account Number");
             account.Balance = Utils.CheckFieldIsNumber("Balance");

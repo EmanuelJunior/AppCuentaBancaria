@@ -7,7 +7,7 @@ namespace AppCuentaBanca
         // Unique SavingsAccount features
         readonly float profitAbility = 0.01f;
         readonly int operationsLimit = 6;
-        readonly float costOperation = 3200;
+        readonly int costOperation = 3200;
 
         public SavingsAccount() { this.typeAccount = "Savings Account"; }
 
@@ -24,6 +24,18 @@ namespace AppCuentaBanca
             
             this.Operations += 1;
             return true;
+        }
+
+        public override void OperationsCollection(){
+            if (this.operations < operationsLimit ) {return;}
+
+            int chargePerOperation = this.operations - operationsLimit;
+            int collection = chargePerOperation * costOperation;
+            this.balance -= collection;
+            Console.WriteLine($"Number of operations executed: { this.operations }");
+            Console.WriteLine($"Total cost of operations: { collection }");
+            Console.WriteLine($"New Balance: { this.balance }");
+            this.operations = operationsLimit;   
         }
     }
 }
