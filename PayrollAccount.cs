@@ -4,15 +4,21 @@ namespace AppCuentaBanca
 {
     public class PayrollAccount : Account
     {
+        // Unique SavingsAccount features
         string companyName;
         int companyNIT;
-        readonly int operationsLimit = 6;
-        readonly float costOperation = 3000;
+        new int operationsLimit = 8;
+        new int costOperation = 3200;
 
-        public PayrollAccount() { this.typeAccount = "Payroll Account"; }
+        public PayrollAccount() { 
+            base.operationsLimit = operationsLimit;
+            base.costOperation = costOperation;
+            
+            this.typeAccount = "Payroll Account"; 
+        }
 
         public override void ShowAccountData( bool showType = false ) {
-            base.ShowAccountData();
+            base.ShowAccountData( showType );
             Console.WriteLine($"Company name: {this.companyName}");
             Console.WriteLine($"Company NIT: {this.companyNIT}");
         }
@@ -22,9 +28,8 @@ namespace AppCuentaBanca
             Console.Write("Enter the name of the company: ");
             this.companyName = Console.ReadLine();
 
-            this.companyNIT = this.CheckFieldIsNumber("Enter the NIT of the company: ");
+            this.companyNIT = Utils.CheckFieldIsNumber("Enter the NIT of the company: ");
             return "Payroll-account".ToUpper();
         }
-
     }
 }

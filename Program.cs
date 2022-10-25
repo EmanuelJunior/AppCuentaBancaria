@@ -6,7 +6,7 @@ namespace AppCuentaBanca
     internal class Program
     {
         static void Main() { 
-            Controller.OptionsPersonalAccount(); 
+            Controller.OptionsPersonalAccount();
         }
     }
 }

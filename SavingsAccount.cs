@@ -5,37 +5,44 @@ namespace AppCuentaBanca
     public class SavingsAccount : Account
     {
         // Unique SavingsAccount features
-        readonly float profitAbility = 0.01f;
-        readonly int operationsLimit = 6;
-        readonly int costOperation = 3200;
+        readonly double profitAbility = 0.01d;
+        new int operationsLimit = 6;
+        new int costOperation = 3000;
+        DateTime lastTimeProfiAbility = DateTime.Now;
 
-        public SavingsAccount() { this.typeAccount = "Savings Account"; }
+        public SavingsAccount() { 
+            base.operationsLimit = operationsLimit;
+            base.costOperation = costOperation;
+
+            this.typeAccount = "Savings Account"; 
+        }
 
         public override string ToString() {
             return "Savings-account".ToUpper();
         }
 
-        // Methods
-
-        // Counts the number of operations performed after the free limit
-        public override bool TransferMoney(Account targetAccount, int amount) {
-            bool executeTransfer = base.TransferMoney( targetAccount, amount);
-            if (executeTransfer != true) return false;
+        // Logic specific of the metohd CostMonthlyFee for the SavingAccount
+        // Calculate the profitAbility of the account and every minute adds up to that profitability
+        public override void CostMonthlyFee(){
             
-            this.Operations += 1;
-            return true;
+            TimeSpan timeSpan = DateTime.Now - this.lastTimeProfiAbility;
+            double balanceProfitAbility = this.balance * profitAbility;
+
+            if (timeSpan.TotalSeconds < 60) {
+                Console.WriteLine("The profitAbility is not yet available.");
+                return;
+            }
+
+            // Transform balanceProfitAbility to int
+            int balanceProfitAbilityInt = (int)balanceProfitAbility;
+            this.balance += balanceProfitAbilityInt;
+
+            this.lastTimeProfiAbility = DateTime.Now;
+
+            Console.WriteLine($"The profit ability in the month is: {Utils.TransformNumberToMoney(balanceProfitAbilityInt)}");
+            Console.WriteLine($"The new balance is: {Utils.TransformNumberToMoney( this.balance )}\n");
+
         }
 
-        public override void OperationsCollection(){
-            if (this.operations < operationsLimit ) {return;}
-
-            int chargePerOperation = this.operations - operationsLimit;
-            int collection = chargePerOperation * costOperation;
-            this.balance -= collection;
-            Console.WriteLine($"Number of operations executed: { this.operations }");
-            Console.WriteLine($"Total cost of operations: { collection }");
-            Console.WriteLine($"New Balance: { this.balance }");
-            this.operations = operationsLimit;   
-        }
     }
 }

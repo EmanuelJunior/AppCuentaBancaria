@@ -19,11 +19,12 @@ namespace AppCuentaBanca
                 Console.Write("Enter the type of account: ");
                 string typeAccountLogin = Console.ReadLine();
 
-                if ( typeAccountLogin != "1" && typeAccountLogin != "2" && typeAccountLogin != "3" && typeAccountLogin != "4" && typeAccountLogin != "root" ) {	
+                if ( typeAccountLogin != "1" && typeAccountLogin != "2" && typeAccountLogin != "3" && typeAccountLogin != "4" && typeAccountLogin != "5" && typeAccountLogin != "root") {	
                     throw new Exception("\nThe account type is not valid");
                 }
                 
                 int idNumberToFind;
+                // Predicate null if nothing was selected
                 Predicate<Account> condition = null;
                 
                 if ( typeAccountLogin != "root" ) {
@@ -46,8 +47,8 @@ namespace AppCuentaBanca
                 switch (typeAccountLogin)
                 {
                     case "1":
-                        i = expressAccount.FindIndex( condition );
-                        account = Admin.expressAccount[i];
+                        i = expressAccounts.FindIndex( condition );
+                        account = Admin.expressAccounts[i];
                         break;
                     case "2":
                         i = payrollAccounts.FindIndex( condition );
@@ -61,6 +62,9 @@ namespace AppCuentaBanca
                         i = currentAccounts.FindIndex( condition );
                         account = Admin.currentAccounts[i];
                         break;
+                    case "5":
+                        isLoggedIn = true;
+                        break;
                     case "root":
                         Admin.OptionsForAdmin();
                         isLoggedIn = false;
@@ -70,7 +74,7 @@ namespace AppCuentaBanca
                         break;
                 }
 
-                // Validate that the account has been deleted and show a message
+                // Validate that the account does not exist and show a message
                 if ( i == -1 ) throw new Exception("\nThe account does not exist...".ToUpper());
             }
 
@@ -85,7 +89,7 @@ namespace AppCuentaBanca
         // Personal account options menu
         public static void OptionsPersonalAccount() {
 
-            // login to a personal account, if you don't find an account, ask for the info again
+            // Login to a personal account, if you don't find an account, ask for the info again
             Account personalAccount = Utils.TryCodeUntilItWorks<Account>( "\nAn error was generated, please try again to continue".ToUpper(), null, LoginWithAccountNumber);
             bool continueRunning = true;
             bool hidePressKey = false;
@@ -93,15 +97,37 @@ namespace AppCuentaBanca
             while ( continueRunning ) {
 
                 Console.Clear();
-                User.ShowMenuAccount( personalAccount.Name, personalAccount.Balance );
+                hidePressKey = false;
+                User.ShowMenuAccount( personalAccount.Name, personalAccount.Balance, personalAccount.Operations, personalAccount.typeAccount );
                 Console.Write("\nEnter the operation to do: ");
                 string operationToDo = Console.ReadLine();
 
                 switch (operationToDo)
                 {
                     case "1":
-                        // Find the destination account to transfer money to
-                        Account targetAccount = Utils.TryCodeUntilItWorks<Account>( "\nAn error was generated, please try again to continue".ToUpper(), Admin.ConsultIndividualAccount, null, "Consult Account", true);
+                        Account targetAccount = null;
+                        bool isTargetAccount = false;
+
+                        while ( !isTargetAccount ) {
+                            Console.Clear();
+
+                            // Find the destination account to transfer money to
+                            UiAdmin.ListAccountsChoose("Transfer money");
+                            Console.Write("\nEnter the destination account to transfer money: ");
+                            string typeAccount = Console.ReadLine();
+
+                            typeAccount = typeAccount == "1" ? "express" : typeAccount == "2" ? "payroll" : typeAccount == "3" ? "savings" : typeAccount == "4" ? "current" : "0";
+
+                            if ( typeAccount == "0" ) {
+                                Console.WriteLine("\nThe account type is not valid");
+                                Console.WriteLine("\nPress any key to continue...");
+                                Console.ReadKey();
+                                break;
+                            }
+
+                            targetAccount = Utils.TryCodeUntilItWorks<Account>( "\nAn error was generated, please try again to continue".ToUpper(), Admin.ConsultIndividualAccount, null, "Consult Account", true, typeAccount);
+                            if ( targetAccount != null ) isTargetAccount = true;
+                        }
 
                         Console.Clear();
                         Console.Write("Enter the amount to transfer: ");
@@ -111,7 +137,8 @@ namespace AppCuentaBanca
                         break;
                     case "2":
                         // Calls the method that performs a withdrawal 
-                        personalAccount.Withdraw( 100f );
+                        Console.Clear();
+                        personalAccount.Withdraw();
                         break;
                     case "3":
                         // Calls the method that performs a deposit

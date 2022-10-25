@@ -1,20 +1,7 @@
-using System.Collections.Generic;
 using System;
 
-using System.Threading;
-using System.Threading.Tasks;
-
-// Directive for use Anonymous
+using System.Collections.Generic;
 using System.Linq;
-
-// Directive for use the class Random
-using System.Security.Cryptography;
-
-// Directive for use the class Stopwatch
-using System.Diagnostics;
-
-// Directive for use the class DateTime
-using System.Globalization;
 
 namespace AppCuentaBanca
 {
@@ -42,23 +29,37 @@ namespace AppCuentaBanca
             // Prints the result of the transfer
             Console.WriteLine($"\nAmount: {amount} - Personal Balance: {this.balance}");
             Console.WriteLine($"Amount: {amount} - Target Balance: {targetAccount.balance}");
+
+            this.operations += 1;
             return true;
         }
         
+        // Withdraw money from the account
         public virtual bool Withdraw( float amount ) {
 
-            // Withdraw money from the account
-            //
             if ( this.balance < amount ) {
                 Console.WriteLine("The money cannot be withdrawn, the amount is greater than the available balance."); 
                 return false;
             }
 
+            this.operations += 1;
             return true;
         }
-        public virtual bool Withdraw() { return false; }
 
-        // Function that enter a specific amount to the personal account
+        public virtual bool Withdraw() {
+            // Ask for the amount to withdraw
+            int amount = Utils.CheckFieldIsNumber("How much is the amount you want to withdraw?");
+
+            bool moneyCanBeWithdraw = this.Withdraw( amount );
+            if ( !moneyCanBeWithdraw ) return false;
+            
+            this.balance -= amount;
+            Console.WriteLine($"\nTransferred: {Utils.TransformNumberToMoney(amount)}, \nRemaining money: {Utils.TransformNumberToMoney(this.balance)}");
+            Console.WriteLine("\nThe withdrawal was successful...".ToUpper());
+            return true;
+        }
+
+        // Make a deposit in the account
         public virtual void MakeDeposit( int amount) {
 
             if (amount <= 0) {
@@ -67,40 +68,52 @@ namespace AppCuentaBanca
             }
 
             this.balance += amount;
-            Console.WriteLine($"\nThe new balance is: ${ Utils.TransformNumberToMoney( this.balance ) }...");
+            Console.WriteLine($"\nThe new balance is: { Utils.TransformNumberToMoney( this.balance ) }...");
         }
 
-        // create a function that show the account balance
-        public virtual void CheckBalance() {
+        // Create a function that show the account balance
+        public virtual bool CheckBalance() {
             Console.Write("Are you sure to check the account balance? y/n: ");
             string answer = Console.ReadLine();
             if ( answer != "y" && answer != "Y" ){
-                Console.WriteLine("Exit...");
-                return;
+                Console.WriteLine("\nConsultation was not performed - Exit".ToUpper());
+                return false;
             } 
-            Console.WriteLine($"\nThe account balance is: ${Utils.TransformNumberToMoney( this.balance )}"); 
+            Console.WriteLine($"\nThe account balance is: {Utils.TransformNumberToMoney( this.balance )}"); 
+
+            this.operations += 1;
+            return true;
         }
 
-        // Method that calculate the Administration Fee (only declared)
-        public virtual TimeSpan CostAdministrationFee() {
-            // Calculates the administration fee and the sample
-            DateTime today = DateTime.Now;
-            TimeSpan interval = today - dayCreateAccount;
+        // Method that calculate the CostMonthlyFee
+        public virtual void CostMonthlyFee() {}
 
-            return interval;
-        }
 
         // Method that calculate the OperationsCollection
-        public virtual void OperationsCollection() { }
-        public virtual void BalanceReport() {
-            Console.WriteLine("\nThese are the costs generated throughout the month");
+        public virtual void OperationsCollection() {
+            
+            if (this.operations < operationsLimit ) return;
 
-            // Calls the CostAdministrationFee method
-            CostAdministrationFee();
+            int chargePerOperation = this.operations - operationsLimit;
+            int collection = chargePerOperation * costOperation;
+            this.balance -= collection;
+
+            Console.WriteLine($"Number of operations executed: { this.operations }");
+            Console.WriteLine($"Total cost of operations: { Utils.TransformNumberToMoney( collection ) }");
+            Console.WriteLine($"New Balance: { Utils.TransformNumberToMoney( this.balance ) }");
+
+            this.operations = operationsLimit;
+        }
+        
+        // Allows at any time to check the available balance in the account
+        public virtual void BalanceReport() {
+            Console.WriteLine("\nThese are the costs generated throughout the month\n");
+
+            CostMonthlyFee();
             OperationsCollection();
         }
 
-        // create function that shows all the properties of the class
+        // Create function that shows all the properties of the class
         public virtual void ShowAccountData( bool showType = false ) {
             if ( showType ) Console.WriteLine($"\nType: ".ToUpper() + this.typeAccount);
             Console.WriteLine($"\nCreation Date: {this.dayCreateAccount}");
@@ -112,36 +125,16 @@ namespace AppCuentaBanca
             Console.WriteLine($"ID number: {this.idNumber}");
             Console.WriteLine($"Account number: {this.accountNumber}");
             Console.WriteLine($"Operations: {this.operations}");
-            Console.WriteLine($"Balance: ${Utils.TransformNumberToMoney( this.balance )}");
+            Console.WriteLine($"Balance: {Utils.TransformNumberToMoney( this.balance )}");
             Console.WriteLine($"Phone: {this.phone}");
-        }
-
-        public int CheckFieldIsNumber( string message) {
-            // Cycle to validate the field number
-            bool IsCorrect = false;
-            int field = 0;
-
-            while ( !IsCorrect ) {
-                try {
-                    if ( field == 0 ) {
-                        Console.Write($"{message}: ");
-                        field = int.Parse(Console.ReadLine());
-                        Console.Clear();
-                        IsCorrect = true;
-                    }
-                } catch ( Exception ) {
-                    Console.Clear();
-                    Console.WriteLine($"\nThe {message} number must be a number\n".ToUpper());
-                    IsCorrect = false;
-                }
-            }
-
-            return field;
         }
 
         /* Declaring the variables that will be used in the class. */
         protected readonly DateTime dayCreateAccount = DateTime.Now;
-        protected string typeAccount;
+        public string typeAccount;
+
+        protected int operationsLimit = 0;
+        protected int costOperation = 0;
 
         protected int balance { get; set; }
 
